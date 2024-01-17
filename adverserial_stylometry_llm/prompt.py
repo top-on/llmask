@@ -46,19 +46,18 @@ api_client = get_api_client()
 system_prompt: str = """
 """
 user_prompt = """
-    In the input paragraph
-    * exange as many words as possible with their synonyms.
-    * Make sure many words are changed.
-    * do not change the meaning too much.
+    paraphrase the input paragraph by replacing ALL words with their synonyms.
+    try to replace each and every word.
+    find a similar word and use it in the original word's place.
+    think like a thesaurus, replacing each word.
+    but do not change the meaning of the paragraph.
 
-    As output, only return the changed paragraph.
-    Do NOT start with 'here is', 'here's' 'sure' or alike.
-    Only return the changed paragraph.
-
-    Input paragraph:
-
-    Pakistan on Wednesday recalled its ambassador from Iran.
-    And it suspended all Iraninan high-level visits.
+    input paragraph:
+    Another problem with the settler colonialism narrative is that 
+    it treats each side as a monolithic actor, 
+    playing the role of colonizer and victim, respectively. 
+    In reality there is a diversity of ideas and interests 
+    in both the Israeli and Palestinian camps.
     """
 
 response = query_llm(
@@ -66,7 +65,7 @@ response = query_llm(
     system_prompt=system_prompt,
     user_prompt=user_prompt,
     # max_tokens=50,
-    temperature=1.5,
+    temperature=0.0,
     seed=42,
 )
 print(response)
