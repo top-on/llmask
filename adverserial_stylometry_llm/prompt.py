@@ -46,27 +46,24 @@ api_client = get_api_client()
 system_prompt: str = """
 """
 user_prompt = """
-    paraphrase the input paragraph by replacing ALL words with their synonyms.
+    change the input paragraph by replacing ALL words with their synonyms.
     try to replace each and every word.
     find a similar word and use it in the original word's place.
     think like a thesaurus, replacing each word.
     but do not change the meaning of the paragraph.
 
     input paragraph:
-    Another problem with the settler colonialism narrative is that 
-    it treats each side as a monolithic actor, 
-    playing the role of colonizer and victim, respectively. 
-    In reality there is a diversity of ideas and interests 
-    in both the Israeli and Palestinian camps.
+
+    It's super cold today, so what are we gonna do about it?
+    let's just chill, but under a duvet with a warm Yorkshire tea.
     """
 
 response = query_llm(
     api_client=api_client,
     system_prompt=system_prompt,
     user_prompt=user_prompt,
-    # max_tokens=50,
     temperature=0.0,
-    seed=42,
+    seed=1337,
 )
 print(response)
 
