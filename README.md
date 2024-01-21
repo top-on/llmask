@@ -9,7 +9,8 @@ The main use cases of Adversarial Stylometry are:
 
 ## Disclaimer
 
-⚠️ This project currently is just a demo on what LLMs can do for authorship anonymization. ⚠️
+⚠️ This project currently is just a demo on what LLMs can do for authorship anonymization.
+⚠️ There is currently no proof that this tool can beat state-of-the-art stylometry!
 
 ### Known Limitations
 
@@ -65,5 +66,6 @@ Some other models have been evaluated negatively, for different reasons:
 ## Roadmap
 * automate model download and startup from CLI
 * publish CLI on PyPi
+* add transformation for imitation
 * Test more models
 * Config for which model to load on startup
