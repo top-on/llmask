@@ -14,57 +14,41 @@ def get_api_client() -> OpenAI:
 
 def query_llm(
     api_client: OpenAI,
-    system_prompt: str,
-    user_prompt: str,
-    **kwargs,
+    instructions: str,
+    input: str,
+    temperature: float,
+    seed: int,
 ) -> str:
-    """Prompt LLM."""
+    """Interface function to query LLM and retrieve response.
+
+    Args:
+        api_client: Connection to LLM server
+        instructions: instructions on how to change input text
+        input: input text to be changed
+        temperature: parameter passed to LLM
+        seed: random seed (for reproducibility)
+    Returns:
+        response from LLM
+    """
 
     completion = api_client.chat.completions.create(
         model="LLaMA_CPP",
-        # stream=True,  # TODO: test
         messages=[
             {
                 "role": "system",
-                "content": system_prompt,
+                "content": instructions,
             },
             {
                 "role": "user",
-                "content": user_prompt,
+                "content": input,
             },
         ],
-        **kwargs,
+        temperature=temperature,
+        seed=seed,
     )
 
-    response = completion.choices[0].message.content
+    response = str(completion.choices[0].message.content)
     return response
 
-
-# %%
-api_client = get_api_client()
-
-system_prompt: str = """
-"""
-user_prompt = """
-    change the input paragraph by replacing ALL words with their synonyms.
-    try to replace each and every word.
-    find a similar word and use it in the original word's place.
-    think like a thesaurus, replacing each word.
-    but do not change the meaning of the paragraph.
-
-    input paragraph:
-
-    It's super cold today, so what are we gonna do about it?
-    let's just chill, but under a duvet with a warm Yorkshire tea.
-    """
-
-response = query_llm(
-    api_client=api_client,
-    system_prompt=system_prompt,
-    user_prompt=user_prompt,
-    temperature=0.0,
-    seed=1337,
-)
-print(response)
 
 # %%
