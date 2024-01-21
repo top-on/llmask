@@ -63,7 +63,6 @@ Some other models have been evaluated negatively, for different reasons:
 * models/llava-v1.5-7b-q4.llamafile -> frequently produced empty responses
 
 ## Roadmap
-* make repo public
 * automate model download and startup from CLI
 * publish CLI on PyPi
 * Test more models
