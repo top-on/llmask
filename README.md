@@ -12,7 +12,6 @@ Project to demonstrate the use of LLMs for [adverserial stylometry](https://en.w
 * models/llava-v1.5-7b-q4.llamafile -> sometimes empty responses
 
 ## Roadmap
-
 * Automate download of model
 * Test more models
 * Config for which model to load on startup
