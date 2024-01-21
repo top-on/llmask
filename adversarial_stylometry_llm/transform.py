@@ -62,7 +62,8 @@ TRANSFORMATION_MAPPING = {
 
 
 def parse_transformations_string(transformations: str) -> list[Callable]:
-    # check that input is valid
+    """Parse CLI parameter 'transformations' to list of to-be-applied functions."""
+    # check input validity
     for transformation in transformations:
         try:
             assert transformation in TRANSFORMATION_MAPPING.keys()

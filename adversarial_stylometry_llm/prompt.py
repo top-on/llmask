@@ -5,7 +5,7 @@ from openai import OpenAI
 
 
 def get_api_client() -> OpenAI:
-    """Get API client."""
+    """Get API client to locally running LLM, which has OpenAI compatibility."""
     return OpenAI(
         base_url="http://localhost:8080/v1",
         api_key="sk-no-key-required",
