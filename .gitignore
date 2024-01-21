@@ -1,3 +1,6 @@
+# python
+*.pyc
+
 # model artifacts
 /models
 llama.log
