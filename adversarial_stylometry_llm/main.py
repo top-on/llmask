@@ -27,7 +27,7 @@ os.environ["NO_COLOR"] = "1"
 @app.command()
 def transform(
     transformations: str = Option(
-        ...,
+        "ts",
         "-t",
         "--transformations",
         help=(
