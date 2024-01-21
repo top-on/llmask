@@ -9,8 +9,8 @@ The main use cases of Adversarial Stylometry are:
 
 ## Disclaimer
 
-⚠️ This project currently is just a demo on what LLMs can do for authorship anonymization.
-⚠️ There is currently no proof that this tool can beat state-of-the-art stylometry!
+⚠️ This project currently is just a demo on what LLMs can do for authorship anonymization.<br>
+⚠️ There is no proof that this tool can beat state-of-the-art stylometry!
 
 ### Known Limitations
 
