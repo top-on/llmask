@@ -1,9 +1,10 @@
 [tool.poetry]
-name = "adverserial-stylometry-llm"
+name = "adversarial-stylometry-llm"
 version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
+packages = [{ include = "adversarial_stylometry_llm" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -13,10 +14,12 @@ typer = "^0.9.0"
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.28.0"
 
+[tool.poetry.scripts]
+asllm = "adversarial_stylometry_llm.main:app"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
 
 [tool.mypy]
 ignore_missing_imports = true
