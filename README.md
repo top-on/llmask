@@ -78,7 +78,6 @@ Some other models have been evaluated negatively, for different reasons:
 * models/llava-v1.5-7b-q4.llamafile -> frequently produced empty responses
 
 ## Roadmap
-* store model in central cache folder (not relative path)
 * traceable output (see TODO in CLI module)
 * add code quality checks (ruff, mypy, pre-commit)
 * publish CLI on PyPi

@@ -1,6 +1,5 @@
 """Main entrypoint."""
 
-# %%
 import logging
 import os
 from typing import Callable
@@ -15,7 +14,6 @@ from llmask.transform import (
 
 logging.basicConfig(level=logging.INFO)
 
-# %%
 app = Typer(
     name="adverserial_stylometry_llm",
     add_completion=False,
@@ -43,11 +41,12 @@ def download():
         print("Model already downloaded. Run 'clear' to make re-download possible.")
     else:
         print("Downloading model...")
+        model_path.parent.mkdir(parents=True, exist_ok=True)
         download_file(
             source_url=MODEL.url,
             dest_path=model_path,
         )
-        print("Download finished. Continue with 'transform' command.")
+        print("Download finished. Continue with 'serve' command.")
 
 
 @app.command()
@@ -56,8 +55,12 @@ def serve() -> None:
 
     The local model server keeps running while Terminal window remains open.
     """
+    if not (MODELS_DIR / MODEL.filename).exists():
+        print("Model not found in local cache. Run 'download' command first. Exiting.")
+        exit(1)
+
     print("Serving model ...")
-    serve_model(model=MODEL)
+    serve_model(model=MODEL, models_dir=MODELS_DIR)
     print("\nModel server stopped. Exiting.")
 
 
@@ -81,7 +84,7 @@ def transform(
 ):
     """Transform input text with chained transformations by Large Language Model."""
     logging.info(f"'transform' called with {transformations=}, {input=}")
-    # %%
+
     transformation_funcs: list[Callable] = parse_transformations_string(
         transformations=transformations
     )
@@ -97,6 +100,5 @@ def transform(
         print(text)
 
 
-# %%
 if __name__ == "__main__":
     app()

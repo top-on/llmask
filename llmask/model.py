@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 from pydantic import BaseModel
 
-MODELS_DIR = Path("models/")
+MODELS_DIR = Path.home() / ".cache/llmask/models/"
 
 
 class Model(BaseModel):
