@@ -1,7 +1,7 @@
 # LLMask [ɛl ɛl 'ma:sk]
 
-A command-line tool for masking authorship of a text,
-by changing its writing style with a Large Language Model.
+A command-line tool for masking authorship of text,
+by changing the writing style with a Large Language Model.
 
 The main use cases of masking an author's writing sytle are:
 
