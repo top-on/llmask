@@ -18,7 +18,7 @@ pydantic = "^2.5.3"
 ipykernel = "^6.28.0"
 
 [tool.poetry.scripts]
-asllm = "adversarial_stylometry_llm.main:app"
+asllm = "adversarial_stylometry_llm.cli:app"
 
 [build-system]
 requires = ["poetry-core"]
