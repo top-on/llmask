@@ -68,6 +68,7 @@ Some other models have been evaluated negatively, for different reasons:
 * prettify interface with rich
 * add code quality checks (ruff, mypy, pre-commit)
 * traceable output (see TODO in CLI module)
+* find better project name and CLI command
 * publish CLI on PyPi
 * add transformation for imitation
 * Test more models
