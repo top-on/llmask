@@ -64,6 +64,7 @@ Some other models have been evaluated negatively, for different reasons:
 * models/llava-v1.5-7b-q4.llamafile -> frequently produced empty responses
 
 ## Roadmap
+* add open license
 * automate server startup from CLI
 * publish CLI on PyPi
 * add transformation for imitation
