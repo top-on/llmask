@@ -1,7 +1,7 @@
-# LLMask
+# LLMask [el-el-'mask]
 
-A command-line tool for masking authorship of a text by obfuscating its writing style,
-with the help of Large Language Models.
+A command-line tool for masking authorship of a text,
+by changing its writing style with a Large Language Model.
 
 The main use cases of masking an author's writing sytle are:
 
@@ -55,8 +55,8 @@ This tool can be installed with `poetry install`.
 ### Usage options
 
 ```
-$ asllm -h
-Usage: asllm [OPTIONS]
+$ llmask -h
+Usage: llmask [OPTIONS]
 
   Transform input text with chained transformations by Large Language Model.
 
@@ -78,8 +78,9 @@ Some other models have been evaluated negatively, for different reasons:
 * models/llava-v1.5-7b-q4.llamafile -> frequently produced empty responses
 
 ## Roadmap
-* add code quality checks (ruff, mypy, pre-commit)
+* store model in central cache folder (not relative path)
 * traceable output (see TODO in CLI module)
+* add code quality checks (ruff, mypy, pre-commit)
 * publish CLI on PyPi
 * add transformation for imitation
 * Test more models
