@@ -1,7 +1,7 @@
 """Module with functions to transform text."""
 
 from typing import Callable
-from adversarial_stylometry_llm.prompt import get_api_client, query_llm
+from llmask.prompt import get_api_client, query_llm
 
 
 def thesaurus(input: str) -> str:

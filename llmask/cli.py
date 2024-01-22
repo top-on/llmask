@@ -6,10 +6,10 @@ import os
 from typing import Callable
 
 from typer import Typer, Option
-from adversarial_stylometry_llm.model import MODEL, MODELS_DIR, download_file
-from adversarial_stylometry_llm.serve import serve_model
+from llmask.model import MODEL, MODELS_DIR, download_file
+from llmask.serve import serve_model
 
-from adversarial_stylometry_llm.transform import (
+from llmask.transform import (
     parse_transformations_string,
 )
 

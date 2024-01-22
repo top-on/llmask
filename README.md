@@ -1,11 +1,13 @@
-# Adverserial Styolometry LLM
+# LLMask
 
-Project to demonstrate the use of LLMs for [Adversarial Stylometry](https://en.wikipedia.org/wiki/Adversarial_stylometry).
+A command-line tool for masking authorship of a text by obfuscating its writing style,
+with the help of Large Language Models.
 
-The main use cases of Adversarial Stylometry are:
+The main use cases of masking an author's writing sytle are:
 
-* obfuscating and anonymizing a text's author
+* anonymizing a text's author
 * protecting the identity of whistleblowers and activists
+* see more at [Adversarial Stylometry](https://en.wikipedia.org/wiki/Adversarial_stylometry)
 
 ## Disclaimer
 
@@ -78,7 +80,6 @@ Some other models have been evaluated negatively, for different reasons:
 ## Roadmap
 * add code quality checks (ruff, mypy, pre-commit)
 * traceable output (see TODO in CLI module)
-* find better project name and CLI command
 * publish CLI on PyPi
 * add transformation for imitation
 * Test more models

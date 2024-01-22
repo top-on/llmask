@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "adversarial-stylometry-llm"
+name = "llmask"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["top-on <top-on@posteo.de>"]
 readme = "README.md"
-packages = [{ include = "adversarial_stylometry_llm" }]
+packages = [{ include = "llmask" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -18,7 +18,7 @@ pydantic = "^2.5.3"
 ipykernel = "^6.28.0"
 
 [tool.poetry.scripts]
-asllm = "adversarial_stylometry_llm.cli:app"
+llmask = "llmask.cli:app"
 
 [build-system]
 requires = ["poetry-core"]

@@ -2,7 +2,7 @@
 
 import os
 
-from adversarial_stylometry_llm.model import MODELS_DIR, Model
+from llmask.model import MODELS_DIR, Model
 
 
 def serve_model(model: Model) -> None:
