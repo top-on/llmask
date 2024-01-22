@@ -6,6 +6,7 @@ import os
 from typing import Callable
 
 from typer import Typer, Option
+from adversarial_stylometry_llm.model import MODEL, MODELS_DIR, download_file
 
 from adversarial_stylometry_llm.transform import (
     parse_transformations_string,
@@ -22,6 +23,30 @@ app = Typer(
 
 # deactivate color for rich/colorama (if installed)
 os.environ["NO_COLOR"] = "1"
+
+
+@app.command()
+def clear():
+    """Delete downloaded files."""
+    print("Clearing cached model files...")
+    model_path = MODELS_DIR / MODEL.filename
+    model_path.unlink(missing_ok=True)
+    print("Done.")
+
+
+@app.command()
+def download():
+    """Download Large Language Model into local cache."""
+    model_path = MODELS_DIR / MODEL.filename
+    if model_path.exists():
+        print("Model already downloaded. Run 'clear' to make re-download possible.")
+    else:
+        print("Downloading model...")
+        download_file(
+            source_url=MODEL.url,
+            dest_path=model_path,
+        )
+        print("Download finished. Continue with 'transform' command.")
 
 
 @app.command()
