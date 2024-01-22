@@ -1,12 +1,13 @@
-"""Functions for model handling."""
+"""Module for model handling."""
 
-# %%
 import requests
 from pathlib import Path
 from tqdm import tqdm
 from urllib.parse import urlparse
 
 from pydantic import BaseModel
+
+MODELS_DIR = Path("models/")
 
 
 class Model(BaseModel):
@@ -18,14 +19,13 @@ class Model(BaseModel):
 
     @property
     def filename(self) -> str:
-        return Path(urlparse(MODEL.url).path).name
+        return Path(urlparse(self.url).path).name
 
 
 MODEL = Model(
     name="mistral-7b-instruct-v0.2.Q3_K_M",
     url="https://huggingface.co/jartine/Mistral-7B-Instruct-v0.2-llamafile/resolve/main/mistral-7b-instruct-v0.2.Q3_K_M.llamafile",
 )
-MODELS_DIR = Path("models/")
 
 
 def download_file(
