@@ -1,4 +1,4 @@
-# LLMask [el-el-'mask]
+# LLMask [ɛl ɛl 'ma:sk]
 
 A command-line tool for masking authorship of a text,
 by changing its writing style with a Large Language Model.
