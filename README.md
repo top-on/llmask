@@ -38,9 +38,19 @@ llmask serve
 3. Transform your own writing style into a different one:
 
 ```
-$ llmask transform --input "our sun is shining soo bright on this lecker morning."
+$ llmask transform -i "this was a triumph. i'm making a note here: huge success."
 
-The sun shines very brightly on this lovely morning.
+User-provided input:
+
+> this was a triumph. i'm making a note here: huge success.
+
+Result after applying transformation 'thesaurus':
+
+> This was an astonishing achievement. I'll jot down: extraordinary victory.
+
+Result after applying transformation 'simplify':
+
+> This was a great success. I'll write down: wonderful win.
 ```
 
 ## Getting started
@@ -78,7 +88,6 @@ Some other models have been evaluated negatively, for different reasons:
 * models/llava-v1.5-7b-q4.llamafile -> frequently produced empty responses
 
 ## Roadmap
-* traceable output (see TODO in CLI module)
 * add code quality checks (ruff, mypy, pre-commit)
 * publish CLI on PyPi
 * add transformation for imitation

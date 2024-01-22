@@ -9,10 +9,11 @@ from llmask.model import MODEL, MODELS_DIR, download_file
 from llmask.serve import serve_model
 
 from llmask.transform import (
+    chain_apply_transformations,
     parse_transformations_string,
 )
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARN)
 
 app = Typer(
     name="adverserial_stylometry_llm",
@@ -83,21 +84,21 @@ def transform(
     ),
 ):
     """Transform input text with chained transformations by Large Language Model."""
-    logging.info(f"'transform' called with {transformations=}, {input=}")
+    print("\nUser-provided input:\n")
+    print(f"> {input}\n")
 
     transformation_funcs: list[Callable] = parse_transformations_string(
         transformations=transformations
     )
 
-    # TODO: bring to function
-    texts: list[str] = [input]  # list with each result of transformation chain
-    for transformation_func in transformation_funcs:
-        latest_text = texts[-1]
-        output = transformation_func(input=latest_text)
-        texts.append(output)
+    transformed_texts = chain_apply_transformations(
+        input=input,
+        transformation_funcs=transformation_funcs,
+    )
 
-    for text in texts:
-        print(text)
+    for func, text in zip(transformation_funcs, transformed_texts):
+        print(f"Result after applying transformation '{func.__name__}':\n")
+        print(f"> {text}\n")
 
 
 if __name__ == "__main__":

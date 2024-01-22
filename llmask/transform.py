@@ -76,3 +76,23 @@ def parse_transformations_string(transformations: str) -> list[Callable]:
             exit(1)
 
     return [TRANSFORMATION_MAPPING[char] for char in transformations]
+
+
+def chain_apply_transformations(
+    input: str,
+    transformation_funcs: list[Callable],
+) -> list[str]:
+    """Apply chain of transformations, passing each result as input to the next step.
+
+    Args:
+        input: user-provided text input.
+        transformation_funcs: list of transformation functions to be chained.
+    Return:
+        list of transformed text, for each step of transformation pipeline.
+    """
+    transformed_texts: list[str] = []  # list with each result of transformation chain
+    for transformation_func in transformation_funcs:
+        output = transformation_func(input=input)
+        transformed_texts.append(output)
+        input = output  # use this transformtion's output as next input
+    return transformed_texts
