@@ -65,6 +65,9 @@ Some other models have been evaluated negatively, for different reasons:
 
 ## Roadmap
 * automate server startup from CLI
+* prettify interface with rich
+* add code quality checks (ruff, mypy, pre-commit)
+* traceable output (see TODO in CLI module)
 * publish CLI on PyPi
 * add transformation for imitation
 * Test more models
