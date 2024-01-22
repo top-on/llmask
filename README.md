@@ -19,12 +19,24 @@ Despite it's pre-production status, this library has several known limitations:
 1. Only a limited number of transformations are implemented (see `transform.py`).
 2. Long chains of transformations have observed to make the LLM output artifacts.
 
-## Example usage
+## Example workflow
 
-On the terminal, this tool takes in text and transforms it to 
+1. Download Large Language Model:
 
 ```
-$ asllm  -i "our sun is shining soo bright on this lecker morning."
+asllm download
+```
+
+2. Serve downloaded model on your local machine (keep terminal open while serving):
+
+```
+asllm serve
+```
+
+3. Transform your own writing style into a different one:
+
+```
+$ asllm  transform --input "our sun is shining soo bright on this lecker morning."
 
 The sun shines very brightly on this lovely morning.
 ```
@@ -64,7 +76,6 @@ Some other models have been evaluated negatively, for different reasons:
 * models/llava-v1.5-7b-q4.llamafile -> frequently produced empty responses
 
 ## Roadmap
-* automate server startup from CLI
 * prettify interface with rich
 * add code quality checks (ruff, mypy, pre-commit)
 * traceable output (see TODO in CLI module)

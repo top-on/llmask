@@ -7,6 +7,7 @@ from typing import Callable
 
 from typer import Typer, Option
 from adversarial_stylometry_llm.model import MODEL, MODELS_DIR, download_file
+from adversarial_stylometry_llm.serve import serve_model
 
 from adversarial_stylometry_llm.transform import (
     parse_transformations_string,
@@ -47,6 +48,17 @@ def download():
             dest_path=model_path,
         )
         print("Download finished. Continue with 'transform' command.")
+
+
+@app.command()
+def serve() -> None:
+    """Start model server locally.
+
+    The local model server keeps running while Terminal window remains open.
+    """
+    print("Serving model ...")
+    serve_model(model=MODEL)
+    print("\nModel server stopped. Exiting.")
 
 
 @app.command()
