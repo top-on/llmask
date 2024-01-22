@@ -11,8 +11,8 @@ The main use cases of masking an author's writing sytle are:
 
 ## Disclaimer
 
-⚠️ This project currently is just a demo on what LLMs can do for authorship anonymization.<br>
-⚠️ There is no proof that this tool can beat state-of-the-art stylometry!
+⚠️ This project currently is just a demo of what LLMs can do for authorship anonymization.<br>
+⚠️ There is no proof that this tool can beat state of the art de-anonymization methods!
 
 ### Known Limitations
 
@@ -26,19 +26,19 @@ Despite it's pre-production status, this library has several known limitations:
 1. Download Large Language Model:
 
 ```
-asllm download
+llmask download
 ```
 
 2. Serve downloaded model on your local machine (keep terminal open while serving):
 
 ```
-asllm serve
+llmask serve
 ```
 
 3. Transform your own writing style into a different one:
 
 ```
-$ asllm  transform --input "our sun is shining soo bright on this lecker morning."
+$ llmask transform --input "our sun is shining soo bright on this lecker morning."
 
 The sun shines very brightly on this lovely morning.
 ```
