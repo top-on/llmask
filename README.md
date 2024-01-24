@@ -89,6 +89,8 @@ Some other models have been evaluated negatively, for different reasons:
 
 ## Roadmap
 * add code quality checks (ruff, mypy, pre-commit)
+* introduce tests
+* replace pydantic with something simpler
 * publish CLI on PyPi
 * add transformation for imitation
 * Test more models
