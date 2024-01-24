@@ -4,10 +4,10 @@ import logging
 import os
 from typing import Callable
 
-from typer import Typer, Option
+from typer import Option, Typer
+
 from llmask.model import MODEL, MODELS_DIR, download_file
 from llmask.serve import serve_model
-
 from llmask.transform import (
     chain_apply_transformations,
     parse_transformations_string,

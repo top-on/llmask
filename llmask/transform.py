@@ -1,6 +1,7 @@
 """Module with functions to transform text."""
 
 from typing import Callable
+
 from llmask.prompt import get_api_client, query_llm
 
 

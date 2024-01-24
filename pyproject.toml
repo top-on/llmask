@@ -9,20 +9,39 @@ packages = [{ include = "llmask" }]
 [tool.poetry.dependencies]
 python = "^3.10"
 openai = "^1.8.0"
-typer = "^0.9.0"
-requests = "^2.31.0"
-tqdm = "^4.66.1"
 pydantic = "^2.5.3"
+requests = "^2.31.0"
+typer = "^0.9.0"
+tqdm = "^4.66.1"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.28.0"
+mypy = "^1.8.0"                     # keep in sync with pre-commit
+pre-commit = "^3.6.0"
+ruff = "^0.1.14"                    # keep in sync with pre-commit
+types-requests = "^2.31.0.20240106"
 
 [tool.poetry.scripts]
 llmask = "llmask.cli:app"
 
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.ruff]
+fix = true
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    # Pyflakes
+    "F",
+    # Pycodestyle
+    "E",
+    "W",
+    # isort
+    "I001",
+]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.mypy]
-ignore_missing_imports = true

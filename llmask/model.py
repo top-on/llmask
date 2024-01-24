@@ -1,11 +1,11 @@
 """Module for model handling."""
 
-import requests
 from pathlib import Path
-from tqdm import tqdm
 from urllib.parse import urlparse
 
+import requests
 from pydantic import BaseModel
+from tqdm import tqdm
 
 MODELS_DIR = Path.home() / ".cache/llmask/models/"
 
