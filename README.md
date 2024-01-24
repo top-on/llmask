@@ -98,5 +98,7 @@ Some other models have been evaluated negatively, for different reasons:
 ## Roadmap
 * serve models with llamafile server
 * interactive dialogs on which model to download and serve
+* secure downloads with checking against hard-coded hashes
+* merge model server and model config, into ModelArtifact class
 * publish CLI on PyPi
 * add transformation for imitation
