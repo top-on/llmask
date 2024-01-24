@@ -19,4 +19,4 @@ def serve_model(model: Model, models_dir: Path) -> None:
     assert result == 0, "Could not make model's llamafile executable."
 
     # serve model (non-detached)
-    os.system(f"sh {model_filepath} --nobrowser")
+    os.system(f"sh {model_filepath} --nobrowser --log-disable")
