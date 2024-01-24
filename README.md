@@ -82,10 +82,18 @@ Options:
 
 This project uses the LLM [mistral-7b-instruct-v0.2.Q3_K_M.llamafile](https://huggingface.co/jartine/Mistral-7B-Instruct-v0.2-llamafile).
 
+### Other positive evaluations
+Some models show promise, and could be integrated into this tool:
+* nous-hermes-llama2-13b.Q4_0.gguf -> runs with llamafile server, does not obey 'output only result' with current prompts
+* wizardlm-13b-v1.2.Q4_0.gguf -> runs with llamafile server, obeys capitalization less with current prompts
+
+### Other negative evlauations
 Some other models have been evaluated negatively, for different reasons:
-* models/mistral-7b-instruct-v0.2.Q5_K_S.llamafile - gave meaningless/confused responses
-* mixtral-8x7b-instruct-v0.1.Q5_K_M.llamafile - required too much RAM for an average Apple GPU
+* mistral-7b-instruct-v0.2.Q5_K_S.llamafile -> gave meaningless/confused responses
+* mixtral-8x7b-instruct-v0.1.Q5_K_M.llamafile -> required too much RAM for an average Apple GPU
 * models/llava-v1.5-7b-q4.llamafile -> frequently produced empty responses
+* gpt4all-falcon-newbpe-q4_0.gguf -> hallucinated on short inputs (when run with llamafile server)
+* orca-2-13b.Q4_0.gguf -> produced relatively low change in language style
 
 ## Roadmap
 * publish CLI on PyPi
