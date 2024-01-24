@@ -7,7 +7,10 @@ from urllib.parse import urlparse
 import requests
 from tqdm import tqdm
 
-MODELS_DIR = Path.home() / ".cache/llmask/models/"
+
+def filename_from_url(url: str) -> str:
+    """Extract filename from an URL."""
+    return Path(urlparse(url).path).name
 
 
 class Model(NamedTuple):
@@ -21,13 +24,7 @@ class Model(NamedTuple):
 
     @property
     def filename(self) -> str:
-        return Path(urlparse(self.url).path).name
-
-
-MODEL = Model(
-    name="mistral-7b-instruct-v0.2.Q3_K_M",
-    url="https://huggingface.co/jartine/Mistral-7B-Instruct-v0.2-llamafile/resolve/main/mistral-7b-instruct-v0.2.Q3_K_M.llamafile",
-)
+        return filename_from_url(url=self.url)
 
 
 def download_file(
@@ -36,13 +33,17 @@ def download_file(
 ) -> None:
     """Download file with progress bar.
 
+    Creates destination path's parent folder, if it does not exist.
+
     Args:
         source_url: URL of file to be downloaded.
         dest_path: filepath to save model to.
     """
+    # create parent folder
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    # download with progress bar
     resp = requests.get(source_url, stream=True)
     total = int(resp.headers.get("content-length", 0))
-    # Can also replace 'file' with a io.BytesIO object
     with open(dest_path, "wb") as file, tqdm(
         desc=str(dest_path),
         total=total,

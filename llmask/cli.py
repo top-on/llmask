@@ -6,7 +6,8 @@ from typing import Callable
 
 from typer import Option, Typer
 
-from llmask.model import MODEL, MODELS_DIR, download_file
+from llmask.config import LLAMAFILE_SERVER_URL, MODEL, MODELS_DIR
+from llmask.model import download_file, filename_from_url
 from llmask.serve import serve_model
 from llmask.transform import (
     chain_apply_transformations,
@@ -36,18 +37,32 @@ def clear():
 
 @app.command()
 def download():
-    """Download Large Language Model into local cache."""
+    """Download model server and Large Language Model and into local cache."""
+    # download model server
+    llamafile_server_path = MODELS_DIR / filename_from_url(LLAMAFILE_SERVER_URL)
+    if llamafile_server_path.exists():
+        print(
+            "Model server already downloaded. "
+            "Run 'clear' to make re-download possible."
+        )
+    else:
+        print("Download llamafile server...")
+        download_file(
+            source_url=LLAMAFILE_SERVER_URL,
+            dest_path=llamafile_server_path,
+        )
+        print("Download of model server finished.")
+    # download model
     model_path = MODELS_DIR / MODEL.filename
     if model_path.exists():
         print("Model already downloaded. Run 'clear' to make re-download possible.")
     else:
         print("Downloading model...")
-        model_path.parent.mkdir(parents=True, exist_ok=True)
         download_file(
             source_url=MODEL.url,
             dest_path=model_path,
         )
-        print("Download finished. Continue with 'serve' command.")
+        print("Download of model finished. Continue with 'serve' command.")
 
 
 @app.command()
