@@ -1,9 +1,14 @@
 # python
 *.pyc
+__pycache__
 
 # model artifacts
 /models
-llama.log
+*.log
 
 # mypy
 .mypy_cache
+
+
+# ruff
+.ruff_cache
