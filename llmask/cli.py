@@ -6,8 +6,8 @@ from typing import Callable
 
 from typer import Option, Typer
 
-from llmask.config import CACHE_DIR, MODEL, MODEL_SERVER
-from llmask.model import download_artifact
+from llmask.config import CACHE_DIR, MODEL_SERVER, MODELS
+from llmask.model import Model, download_artifact
 from llmask.serve import serve_model
 from llmask.transform import (
     chain_apply_transformations,
@@ -27,41 +27,73 @@ app = Typer(
 @app.command()
 def clear():
     """Delete downloaded files."""
-    print("Clearing cached model files...")
-    model_path = CACHE_DIR / MODEL.filename
-    model_path.unlink(missing_ok=True)
-    print("Done.")
+    choice = input("Delete all cached files? [y/N]:")
+    if choice != "y":
+        print("Cache will not be deleted. Exiting.")
+        exit(1)
+
+    cached_files = list(CACHE_DIR.glob("*"))
+    print(f"{len(cached_files)} locally cached files to be deleted.")
+    for file in cached_files:
+        print(f"Removing '{file.name}' from cache ...")
+        file.unlink()
+    print("Cache cleared.")
 
 
+# TODO: download choice dialog
 @app.command()
 def download():
     """Download model server and Large Language Model and into local cache."""
-    # OPTIONAL: simplify with DRY
+    # OPTIONAL: download model server on demand
     # download model server
     model_server_path = CACHE_DIR / MODEL_SERVER.filename
     if model_server_path.exists():
-        print(
-            "Model server already downloaded. "
-            "Run 'clear' to make re-download possible."
-        )
+        print("\n✅ Model server was already downloaded.")
     else:
-        print("Download llamafile server...")
+        print("\n⏳ `Downloading model server ...")
         download_artifact(
-            artifact=MODEL_SERVER.url,
-            cache_dir=model_server_path,
+            artifact=MODEL_SERVER,
+            cache_dir=CACHE_DIR,
         )
         print("Download of model server finished.")
-    # download model
-    model_path = CACHE_DIR / MODEL.filename
-    if model_path.exists():
-        print("Model already downloaded. Run 'clear' to make re-download possible.")
+
+    # lookup downloaded models
+    cached_files = {file.name for file in CACHE_DIR.glob("*")}
+    cached_models = [model for model in MODELS if model.filename in cached_files]
+    if len(cached_models) > 0:
+        print("\n📋 The following models were already downloaded:")
+        for i, cached_model in enumerate(cached_models):
+            print(f" ✅ {cached_model}")
     else:
-        print("Downloading model...")
-        download_artifact(
-            artifact=MODEL.url,
-            cache_dir=model_path,
+        print("\nNo models have been downloaded yet.")
+
+    # present download options
+    downloadable_models = [model for model in MODELS if model not in cached_models]
+    if len(downloadable_models) == 0:
+        print(
+            "❗️ No further models available for download. Continue with 'llmask serve'."
         )
-        print("Download of model finished. Continue with 'serve' command.")
+    print("\n📋 The following models can be downloaded:")
+    for i, downloadable_model in enumerate(downloadable_models):
+        print(f"\n [{i}]: {downloadable_model}")
+    choice = input(
+        "\nChoose which model to download "
+        f"(from {list(range(len(downloadable_models)))}): "
+    )
+
+    # validate and parse choice
+    if choice not in [str(index) for index in range(len(downloadable_models))]:
+        print(f"❗️ choice must be from list {list(range(len(downloadable_models)))}.")
+        exit(1)
+    model = downloadable_models[int(choice)]
+
+    # download model
+    print("Downloading model...")
+    download_artifact(
+        artifact=model,
+        cache_dir=CACHE_DIR,
+    )
+    print("Download of model finished. Continue with 'llmask serve'.")
 
 
 @app.command()
@@ -70,12 +102,35 @@ def serve() -> None:
 
     The local model server keeps running while Terminal window remains open.
     """
-    if not (CACHE_DIR / MODEL.filename).exists():
-        print("Model not found in local cache. Run 'download' command first. Exiting.")
+    # check if model server in cache
+    if not (CACHE_DIR / MODEL_SERVER.filename).exists():
+        print("❗️ Model server not found in local cache. Run 'llmask download' first.")
         exit(1)
 
-    print("Serving model ...")
-    serve_model(model=MODEL, model_server=MODEL_SERVER, cache_dir=CACHE_DIR)
+    # lookup which models can be chosen
+    cached_files = {file.name for file in CACHE_DIR.glob("*")}
+    cached_models = [model.name for model in MODELS if model.filename in cached_files]
+    if len(cached_models) == 0:
+        print("❗️ no models cached. Run 'llmask download' first.")
+        exit(1)
+
+    # present options
+    print("\n📋 The following models have been downloaded:")
+    for i, cached_model in enumerate(cached_models):
+        print(f"\n [{i}]: {cached_model}")
+    choice = input(
+        f"\nChoose which model to serve (from {list(range(len(cached_models)))}): "
+    )
+
+    # validate and parse choice
+    if choice not in [str(index) for index in range(len(cached_models))]:
+        print(f"❗️ choice must be from list {list(range(len(cached_models)))}.")
+        exit(1)
+    model_name = cached_models[int(choice)]
+    model: Model = next(model for model in MODELS if model.name == model_name)
+
+    print(f"\n⏳ Serving model '{model.name}'...\n")
+    serve_model(model=model, model_server=MODEL_SERVER, cache_dir=CACHE_DIR)
     print("\nModel server stopped. Exiting.")
 
 
@@ -99,7 +154,7 @@ def transform(
 ):
     """Transform input text with chained transformations by Large Language Model."""
     print("\nUser-provided input:\n")
-    print(f"> {input}\n")
+    print(f"> {input}\n\n")
 
     transformation_funcs: list[Callable] = parse_transformations_string(
         transformations=transformations
@@ -112,7 +167,7 @@ def transform(
 
     for func, text in zip(transformation_funcs, transformed_texts):
         print(f"Result after applying transformation '{func.__name__}':\n")
-        print(f"> {text}\n")
+        print(f"> {text}\n\n")
 
 
 if __name__ == "__main__":

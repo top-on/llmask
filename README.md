@@ -23,30 +23,52 @@ Despite it's pre-production status, this library has several known limitations:
 
 ## Example workflow
 
-1. Download Large Language Model:
+1. choose which Large Language Model to download:
 
 ```
-llmask download
+$ llmask download
+
+
+✅ Model server was already downloaded.
+
+📋 The following models were already downloaded:
+ ✅ mistral-7b-instruct-v0.2.Q3_K_M
+
+📋 The following models can be downloaded:
+
+ [0]: nous-hermes-llama2-13b.Q4_0
+
+Choose which model to download (from [0]):
 ```
 
-2. Serve downloaded model on your local machine (keep terminal open while serving):
+2. Serve downloaded model on your local machine (keep that terminal open):
 
 ```
-llmask serve
+$ llmask serve
+
+
+📋 The following models have been downloaded:
+
+ [0]: mistral-7b-instruct-v0.2.Q3_K_M
+
+Choose which model to serve (from [0]):
 ```
 
-3. Transform your own writing style into a different one:
+3. Mask your writing style by transforming it into a different one:
 
 ```
 $ llmask transform -i "this was a triumph. i'm making a note here: huge success."
+
 
 User-provided input:
 
 > this was a triumph. i'm making a note here: huge success.
 
+
 Result after applying transformation 'thesaurus':
 
 > This was an astonishing achievement. I'll jot down: extraordinary victory.
+
 
 Result after applying transformation 'simplify':
 
@@ -80,11 +102,12 @@ Options:
 
 ## Used Large Language Model
 
-This project uses the LLM [mistral-7b-instruct-v0.2.Q3_K_M.llamafile](https://huggingface.co/jartine/Mistral-7B-Instruct-v0.2-llamafile).
+This project supports the following LLMs:
+* mistral-7b-instruct-v0.2.Q3_K_M
+* nous-hermes-llama2-13b.Q4_0
 
 ### Other positive evaluations
 Some models show promise, and could be integrated into this tool:
-* nous-hermes-llama2-13b.Q4_0.gguf -> runs with llamafile server, does not obey 'output only result' with current prompts
 * wizardlm-13b-v1.2.Q4_0.gguf -> runs with llamafile server, obeys capitalization less with current prompts
 
 ### Other negative evlauations
@@ -96,7 +119,7 @@ Some other models have been evaluated negatively, for different reasons:
 * orca-2-13b.Q4_0.gguf -> produced relatively low change in language style
 
 ## Roadmap
-* interactive dialogs on which model to download and serve
-* secure downloads with checking against hard-coded hashes
+* rename 'serve' to 'start'
+* secure downloads with checking against hard-coded hashes and/or file size
 * publish CLI on PyPi
 * add transformation for imitation
