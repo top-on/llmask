@@ -6,8 +6,8 @@ from typing import Callable
 
 from typer import Option, Typer
 
-from llmask.config import LLAMAFILE_SERVER_URL, MODEL, MODELS_DIR
-from llmask.model import download_file, filename_from_url
+from llmask.config import CACHE_DIR, MODEL, MODEL_SERVER
+from llmask.model import download_artifact
 from llmask.serve import serve_model
 from llmask.transform import (
     chain_apply_transformations,
@@ -15,6 +15,7 @@ from llmask.transform import (
 )
 
 logging.basicConfig(level=logging.WARN)
+os.environ["NO_COLOR"] = "1"  # deactivate color for rich/colorama (if installed)
 
 app = Typer(
     name="adverserial_stylometry_llm",
@@ -22,15 +23,12 @@ app = Typer(
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 
-# deactivate color for rich/colorama (if installed)
-os.environ["NO_COLOR"] = "1"
-
 
 @app.command()
 def clear():
     """Delete downloaded files."""
     print("Clearing cached model files...")
-    model_path = MODELS_DIR / MODEL.filename
+    model_path = CACHE_DIR / MODEL.filename
     model_path.unlink(missing_ok=True)
     print("Done.")
 
@@ -38,29 +36,30 @@ def clear():
 @app.command()
 def download():
     """Download model server and Large Language Model and into local cache."""
+    # OPTIONAL: simplify with DRY
     # download model server
-    llamafile_server_path = MODELS_DIR / filename_from_url(LLAMAFILE_SERVER_URL)
-    if llamafile_server_path.exists():
+    model_server_path = CACHE_DIR / MODEL_SERVER.filename
+    if model_server_path.exists():
         print(
             "Model server already downloaded. "
             "Run 'clear' to make re-download possible."
         )
     else:
         print("Download llamafile server...")
-        download_file(
-            source_url=LLAMAFILE_SERVER_URL,
-            dest_path=llamafile_server_path,
+        download_artifact(
+            artifact=MODEL_SERVER.url,
+            cache_dir=model_server_path,
         )
         print("Download of model server finished.")
     # download model
-    model_path = MODELS_DIR / MODEL.filename
+    model_path = CACHE_DIR / MODEL.filename
     if model_path.exists():
         print("Model already downloaded. Run 'clear' to make re-download possible.")
     else:
         print("Downloading model...")
-        download_file(
-            source_url=MODEL.url,
-            dest_path=model_path,
+        download_artifact(
+            artifact=MODEL.url,
+            cache_dir=model_path,
         )
         print("Download of model finished. Continue with 'serve' command.")
 
@@ -71,12 +70,12 @@ def serve() -> None:
 
     The local model server keeps running while Terminal window remains open.
     """
-    if not (MODELS_DIR / MODEL.filename).exists():
+    if not (CACHE_DIR / MODEL.filename).exists():
         print("Model not found in local cache. Run 'download' command first. Exiting.")
         exit(1)
 
     print("Serving model ...")
-    serve_model(model=MODEL, models_dir=MODELS_DIR)
+    serve_model(model=MODEL, model_server=MODEL_SERVER, cache_dir=CACHE_DIR)
     print("\nModel server stopped. Exiting.")
 
 

@@ -8,14 +8,7 @@ import requests
 from tqdm import tqdm
 
 
-def filename_from_url(url: str) -> str:
-    """Extract filename from an URL."""
-    return Path(urlparse(url).path).name
-
-
-class Model(NamedTuple):
-    """Reference to a Large Language Model."""
-
+class Artifact(NamedTuple):
     name: str
     url: str
 
@@ -24,12 +17,20 @@ class Model(NamedTuple):
 
     @property
     def filename(self) -> str:
-        return filename_from_url(url=self.url)
+        return Path(urlparse(self.url).path).name
 
 
-def download_file(
-    source_url: str,
-    dest_path: Path,
+class Model(Artifact):
+    """Definition of a Large Language Model."""
+
+
+class ModelServer(Artifact):
+    """Definition of a Model Server."""
+
+
+def download_artifact(
+    artifact: Artifact,
+    cache_dir: Path,
 ) -> None:
     """Download file with progress bar.
 
@@ -39,13 +40,14 @@ def download_file(
         source_url: URL of file to be downloaded.
         dest_path: filepath to save model to.
     """
-    # create parent folder
-    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    # create cache dir, if not exists
+    cache_dir.parent.mkdir(parents=True, exist_ok=True)
     # download with progress bar
-    resp = requests.get(source_url, stream=True)
+    artifact_path = cache_dir / artifact.filename
+    resp = requests.get(url=artifact.url, stream=True)
     total = int(resp.headers.get("content-length", 0))
-    with open(dest_path, "wb") as file, tqdm(
-        desc=str(dest_path),
+    with open(artifact_path, "wb") as file, tqdm(
+        desc=str(artifact_path),
         total=total,
         unit="iB",
         unit_scale=True,

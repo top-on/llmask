@@ -96,9 +96,7 @@ Some other models have been evaluated negatively, for different reasons:
 * orca-2-13b.Q4_0.gguf -> produced relatively low change in language style
 
 ## Roadmap
-* serve models with llamafile server
 * interactive dialogs on which model to download and serve
 * secure downloads with checking against hard-coded hashes
-* merge model server and model config, into ModelArtifact class
 * publish CLI on PyPi
 * add transformation for imitation
