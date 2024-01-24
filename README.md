@@ -89,7 +89,8 @@ Some other models have been evaluated negatively, for different reasons:
 
 ## Roadmap
 * introduce tests
-* replace pydantic with something simpler
+* replace pydantic with something simpler, for better security
+* turn off llamafile logs, for better privacy
 * publish CLI on PyPi
 * add transformation for imitation
 * Test more models
