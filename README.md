@@ -87,6 +87,7 @@ Options:
 ```
 
 ## Roadmap
-* make it possible to change port and model
+* make it possible to change port and name of locally running model
 * add transformation for imitation
 * support transformations from and into text files
+* measure success of obfuscation (e.g. check with GPTZero if suspected author is an LLM)
