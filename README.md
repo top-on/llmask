@@ -5,14 +5,14 @@ by changing the writing style with a Large Language Model.
 
 The main use cases of masking an author's writing sytle are:
 
-* anonymizing a text's author
+* anonymizing who is the author of a text
 * protecting the identity of whistleblowers and activists
 * see more at [Adversarial Stylometry](https://en.wikipedia.org/wiki/Adversarial_stylometry)
 
 ## Disclaimer
 
 ⚠️ This project currently is just a demo of what LLMs can do for authorship anonymization.<br>
-⚠️ There is no proof that this tool can beat state of the art de-anonymization methods!
+⚠️ There is no strong evidence yet that this tool can beat state of the art de-anonymization methods!
 
 ### Known Limitations
 
@@ -20,38 +20,21 @@ Despite it's pre-production status, this library has several known limitations:
 
 1. Only a limited number of transformations are implemented (see `transform.py`).
 2. Long chains of transformations have observed to make the LLM output artifacts.
+3. Sensitive content can trigger an LLMs censoring, and thus ruin the output.<br>
+In this case it is advised to try uncensored LLMs, e.g. of the [`wizard-vicuna-uncensored`](https://registry.ollama.ai/library/wizard-vicuna-uncensored) type.
 
 ## Example workflow
 
-1. choose which Large Language Model to download:
+1. Locally serve a Large Language Model server with [ollama](https://ollama.com/):
 
 ```
-$ llmask download
-
-
-✅ Model server was already downloaded.
-
-📋 The following models were already downloaded:
- ✅ mistral-7b-instruct-v0.2.Q3_K_M
-
-📋 The following models can be downloaded:
-
- [0]: nous-hermes-llama2-13b.Q4_0
-
-Choose which model to download (from [0]):
+$ ollama serve
 ```
 
-2. Serve downloaded model on your local machine (keep that terminal open):
+2. Make sure a potent model is downloaded, e.g. a version of [`nous-hermes2`](https://registry.ollama.ai/library/nous-hermes2):
 
 ```
-$ llmask serve
-
-
-📋 The following models have been downloaded:
-
- [0]: mistral-7b-instruct-v0.2.Q3_K_M
-
-Choose which model to serve (from [0]):
+$ ollama pull nous-hermes2:10.7b-solar-q6_K
 ```
 
 3. Mask your writing style by transforming it into a different one:
@@ -78,11 +61,14 @@ Result after applying transformation 'simplify':
 ## Getting started
 ### System requirements
 
-This library is tested on *Apple Silicon*, but it is expected to run on x86, too.
+LLMs can run on ordinary CPUs, e.g. with `ollama`.
+However, GPU acceleration greatly accelerates execution speed.
+
+This project is best tested on Apple Silicon hardware.
 
 ### Installation
 
-This tool can be installed with `poetry install`.
+This command line tool can be installed with `poetry install`.
 
 ### Usage options
 
@@ -100,26 +86,7 @@ Options:
   -h, --help                  Show this message and exit.
 ```
 
-## Used Large Language Model
-
-This project supports the following LLMs:
-* mistral-7b-instruct-v0.2.Q3_K_M
-* nous-hermes-llama2-13b.Q4_0
-
-### Other positive evaluations
-Some models show promise, and could be integrated into this tool:
-* wizardlm-13b-v1.2.Q4_0.gguf -> runs with llamafile server, obeys capitalization less with current prompts
-
-### Other negative evlauations
-Some other models have been evaluated negatively, for different reasons:
-* mistral-7b-instruct-v0.2.Q5_K_S.llamafile -> gave meaningless/confused responses
-* mixtral-8x7b-instruct-v0.1.Q5_K_M.llamafile -> required too much RAM for an average Apple GPU
-* models/llava-v1.5-7b-q4.llamafile -> frequently produced empty responses
-* gpt4all-falcon-newbpe-q4_0.gguf -> hallucinated on short inputs (when run with llamafile server)
-* orca-2-13b.Q4_0.gguf -> produced relatively low change in language style
-
 ## Roadmap
-* rename 'serve' to 'start'
-* secure downloads with checking against hard-coded hashes and/or file size
 * publish CLI on PyPi
 * add transformation for imitation
+* support transformations from and into text files

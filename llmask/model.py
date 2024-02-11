@@ -1,58 +1,56 @@
-"""Module for model handling."""
+"""Wrapper for prompting LLM."""
 
-from pathlib import Path
-from typing import NamedTuple
-from urllib.parse import urlparse
-
-import requests
-from tqdm import tqdm
+# %%
+from openai import OpenAI
 
 
-class Artifact(NamedTuple):
-    name: str
-    url: str
-
-    def __str__(self) -> str:
-        return self.name
-
-    @property
-    def filename(self) -> str:
-        return Path(urlparse(self.url).path).name
+# OPTIONAL: pass port as parameter
+def get_api_client() -> OpenAI:
+    """Get API client to locally running LLM, which has OpenAI compatibility."""
+    return OpenAI(
+        base_url="http://localhost:11434/v1",
+        api_key="sk-no-key-required",
+    )
 
 
-class Model(Artifact):
-    """Definition of a Large Language Model."""
-
-
-class ModelServer(Artifact):
-    """Definition of a Model Server."""
-
-
-def download_artifact(
-    artifact: Artifact,
-    cache_dir: Path,
-) -> None:
-    """Download file with progress bar.
-
-    Creates destination path's parent folder, if it does not exist.
+# OPTIONAL: pass down model name
+def query_llm(
+    api_client: OpenAI,
+    instructions: str,
+    input: str,
+    temperature: float,
+    seed: int,
+) -> str:
+    """Interface function to query LLM and retrieve response.
 
     Args:
-        source_url: URL of file to be downloaded.
-        dest_path: filepath to save model to.
+        api_client: Connection to LLM server
+        instructions: instructions on how to change input text
+        input: input text to be changed
+        temperature: parameter passed to LLM
+        seed: random seed (for reproducibility)
+    Returns:
+        response from LLM
     """
-    # create cache dir, if not exists
-    cache_dir.parent.mkdir(parents=True, exist_ok=True)
-    # download with progress bar
-    artifact_path = cache_dir / artifact.filename
-    resp = requests.get(url=artifact.url, stream=True)
-    total = int(resp.headers.get("content-length", 0))
-    with open(artifact_path, "wb") as file, tqdm(
-        desc=str(artifact_path),
-        total=total,
-        unit="iB",
-        unit_scale=True,
-        unit_divisor=1024,
-    ) as bar:
-        for data in resp.iter_content(chunk_size=1024):
-            size = file.write(data)
-            bar.update(size)
+
+    completion = api_client.chat.completions.create(
+        model="nous-hermes2:10.7b-solar-q6_K",
+        messages=[
+            {
+                "role": "system",
+                "content": instructions,
+            },
+            {
+                "role": "user",
+                "content": input,
+            },
+        ],
+        temperature=temperature,
+        seed=seed,
+    )
+
+    response = str(completion.choices[0].message.content)
+    return response
+
+
+# %%

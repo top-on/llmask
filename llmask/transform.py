@@ -2,9 +2,10 @@
 
 from typing import Callable
 
-from llmask.prompt import get_api_client, query_llm
+from llmask.model import get_api_client, query_llm
 
 
+# OPTIONAL: make functions retun system prompts only, and move queries LLM in model.py?
 def thesaurus(input: str) -> str:
     """Change input by replacing words with synonyms."""
     api_client = get_api_client()
