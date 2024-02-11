@@ -19,6 +19,7 @@ mypy = "^1.8.0"                     # keep in sync with pre-commit
 pre-commit = "^3.6.0"
 ruff = "^0.1.14"                    # keep in sync with pre-commit
 types-requests = "^2.31.0.20240106"
+pytest = "^8.0.0"
 
 [tool.poetry.scripts]
 llmask = "llmask.cli:app"
