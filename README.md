@@ -86,6 +86,15 @@ Options:
   -h, --help                  Show this message and exit.
 ```
 
+## Development setup
+### Install development environment
+
+The development environment can be installed via: `poetry install`.
+
+### Run test suite
+
+To execute this project's test suite, run `pytest tests/`
+
 ## Roadmap
 * make it possible to change port and name of locally running model
 * add transformation for imitation
