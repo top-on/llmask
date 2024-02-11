@@ -68,7 +68,7 @@ This project is best tested on Apple Silicon hardware.
 
 ### Installation
 
-This command line tool can be installed with `poetry install`.
+This command line tool can be installed with `pipx install`.
 
 ### Usage options
 
