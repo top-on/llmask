@@ -2,13 +2,17 @@
 
 from typing import Callable
 
-from llmask.model import get_api_client, query_llm
+from openai import OpenAI
+
+from llmask.model import query_llm
 
 
 # OPTIONAL: make functions retun system prompts only, and move queries LLM in model.py?
-def thesaurus(input: str) -> str:
+def thesaurus(
+    input: str,
+    api_client: OpenAI,
+) -> str:
     """Change input by replacing words with synonyms."""
-    api_client = get_api_client()
     instructions: str = """
         change the user input by replacing each word with their synonyms.
         replace every word. change all words.
@@ -29,10 +33,11 @@ def thesaurus(input: str) -> str:
     return response
 
 
-def simplify(input: str) -> str:
+def simplify(
+    input: str,
+    api_client: OpenAI,
+) -> str:
     """Simplify language of input."""
-    api_client = get_api_client()
-
     instructions: str = """
         change the user input by simplifying the language.
         replace uncommon words by common ones.
@@ -83,6 +88,7 @@ def parse_transformations_string(transformations: str) -> list[Callable]:
 def chain_apply_transformations(
     input: str,
     transformation_funcs: list[Callable],
+    api_client: OpenAI,
 ) -> list[str]:
     """Apply chain of transformations, passing each result as input to the next step.
 
@@ -94,7 +100,10 @@ def chain_apply_transformations(
     """
     transformed_texts: list[str] = []  # list with each result of transformation chain
     for transformation_func in transformation_funcs:
-        output = transformation_func(input=input)
+        output = transformation_func(
+            input=input,
+            api_client=api_client,
+        )
         transformed_texts.append(output)
         input = output  # use this transformtion's output as next input
     return transformed_texts

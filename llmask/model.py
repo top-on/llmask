@@ -4,11 +4,10 @@
 from openai import OpenAI
 
 
-# OPTIONAL: pass port as parameter
-def get_api_client() -> OpenAI:
+def get_api_client(url: str) -> OpenAI:
     """Get API client to locally running LLM, which has OpenAI compatibility."""
     return OpenAI(
-        base_url="http://localhost:11434/v1",
+        base_url=url,
         api_key="sk-no-key-required",
     )
 
@@ -32,7 +31,6 @@ def query_llm(
     Returns:
         response from LLM
     """
-
     completion = api_client.chat.completions.create(
         model="nous-hermes2:10.7b-solar-q6_K",
         messages=[

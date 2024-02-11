@@ -6,6 +6,7 @@ from typing import Callable
 
 from typer import Option, Typer
 
+from llmask.model import get_api_client
 from llmask.transform import (
     chain_apply_transformations,
     parse_transformations_string,
@@ -38,6 +39,12 @@ def transform(
         "--input",
         help="Input text that will be transformed.",
     ),
+    url: str = Option(
+        "http://localhost:11434/v1",
+        "-u",
+        "--url",
+        help="URL of Open AI compatible model API.",
+    ),
 ):
     """Transform input text with chained transformations by a Large Language Model."""
     print("\nUser-provided input:\n")
@@ -47,9 +54,11 @@ def transform(
         transformations=transformations
     )
 
+    api_client = get_api_client(url=url)
     transformed_texts = chain_apply_transformations(
         input=input,
         transformation_funcs=transformation_funcs,
+        api_client=api_client,
     )
 
     for func, text in zip(transformation_funcs, transformed_texts):
