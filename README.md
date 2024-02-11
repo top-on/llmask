@@ -76,7 +76,7 @@ This command line tool can be installed with `poetry install`.
 $ llmask -h
 Usage: llmask [OPTIONS]
 
-  Transform input text with chained transformations by Large Language Model.
+  Transform input text with chained transformations by a Large Language Model.
 
 Options:
   -t, --transformations TEXT  Compact representation of operations (e.g. 'ts'
