@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "llmask"
-version = "0.1.0"
-description = ""
+version = "0.2.0"
+description = "A command-line tool for masking authorship of text, by changing the writing style with a Large Language Model."
 authors = ["top-on <top-on@posteo.de>"]
 readme = "README.md"
 packages = [{ include = "llmask" }]
