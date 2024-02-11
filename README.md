@@ -87,6 +87,6 @@ Options:
 ```
 
 ## Roadmap
-* publish CLI on PyPi
+* make it possible to change port and model
 * add transformation for imitation
 * support transformations from and into text files
