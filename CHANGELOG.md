@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Make URL to model API configurable
 ### Fixed
 - fix and document tests
+- complete docstrings
 
 ## [0.1.0] - 2024-02-11
 ### Added

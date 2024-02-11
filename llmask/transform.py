@@ -12,7 +12,14 @@ def thesaurus(
     input: str,
     api_client: OpenAI,
 ) -> str:
-    """Change input by replacing words with synonyms."""
+    """Change input by replacing words with their synonyms.
+
+    Args:
+        input: Text input to be transformed.
+        api_client: instance of adapter to model API.
+    Return:
+        Transformed text.
+    """
     instructions: str = """
         change the user input by replacing each word with their synonyms.
         replace every word. change all words.
@@ -37,7 +44,14 @@ def simplify(
     input: str,
     api_client: OpenAI,
 ) -> str:
-    """Simplify language of input."""
+    """Simplify language of input.
+
+    Args:
+        input: Text input to be transformed.
+        api_client: instance of adapter to model API.
+    Return:
+        Transformed text.
+    """
     instructions: str = """
         change the user input by simplifying the language.
         replace uncommon words by common ones.
@@ -69,7 +83,11 @@ TRANSFORMATION_MAPPING = {
 
 
 def parse_transformations_string(transformations: str) -> list[Callable]:
-    """Parse CLI parameter 'transformations' to list of to-be-applied functions."""
+    """Parse CLI parameter 'transformations' to list of to-be-applied functions.
+
+    Args:
+        transformstions: sequential transformations, in compact string format.
+    """
     # check input validity
     for transformation in transformations:
         try:
@@ -95,6 +113,7 @@ def chain_apply_transformations(
     Args:
         input: user-provided text input.
         transformation_funcs: list of transformation functions to be chained.
+        api_client: instance of adapter to model API.
     Return:
         list of transformed text, for each step of transformation pipeline.
     """
