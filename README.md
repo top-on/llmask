@@ -83,6 +83,10 @@ Options:
                               for the steps 'thesaurus -> simplify')
                               [default: ts]
   -i, --input TEXT            Input text that will be transformed.  [required]
+  -m, --model TEXT            Name of model to use (as known to model server).
+                              [default: nous-hermes2:10.7b-solar-q6_K]
+  -u, --url TEXT              URL of Open AI compatible model API.  [default:
+                              http://localhost:11434/v1]
   -h, --help                  Show this message and exit.
 ```
 
@@ -96,7 +100,6 @@ The development environment can be installed via: `poetry install`.
 To execute this project's test suite, run `pytest tests/`
 
 ## Roadmap
-* make it possible to change port and name of locally running model
 * add transformation for imitation
 * support transformations from and into text files
 * measure success of obfuscation (e.g. check with GPTZero if suspected author is an LLM)

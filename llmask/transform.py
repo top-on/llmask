@@ -10,12 +10,14 @@ from llmask.model import query_llm
 # OPTIONAL: make functions retun system prompts only, and move queries LLM in model.py?
 def thesaurus(
     input: str,
+    model_name: str,
     api_client: OpenAI,
 ) -> str:
     """Change input by replacing words with their synonyms.
 
     Args:
         input: Text input to be transformed.
+        model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
     Return:
         Transformed text.
@@ -34,6 +36,7 @@ def thesaurus(
         api_client=api_client,
         instructions=instructions,
         input=input,
+        model_name=model_name,
         temperature=1.5,
         seed=42,
     )
@@ -42,12 +45,14 @@ def thesaurus(
 
 def simplify(
     input: str,
+    model_name: str,
     api_client: OpenAI,
 ) -> str:
     """Simplify language of input.
 
     Args:
         input: Text input to be transformed.
+        model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
     Return:
         Transformed text.
@@ -68,6 +73,7 @@ def simplify(
     response = query_llm(
         api_client=api_client,
         instructions=instructions,
+        model_name=model_name,
         input=input,
         temperature=0.3,
         seed=42,
@@ -106,6 +112,7 @@ def parse_transformations_string(transformations: str) -> list[Callable]:
 def chain_apply_transformations(
     input: str,
     transformation_funcs: list[Callable],
+    model_name: str,
     api_client: OpenAI,
 ) -> list[str]:
     """Apply chain of transformations, passing each result as input to the next step.
@@ -113,6 +120,7 @@ def chain_apply_transformations(
     Args:
         input: user-provided text input.
         transformation_funcs: list of transformation functions to be chained.
+        model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
     Return:
         list of transformed text, for each step of transformation pipeline.
@@ -121,6 +129,7 @@ def chain_apply_transformations(
     for transformation_func in transformation_funcs:
         output = transformation_func(
             input=input,
+            model_name=model_name,
             api_client=api_client,
         )
         transformed_texts.append(output)

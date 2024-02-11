@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 ### Added
-- Make URL to model API configurable
+- make URL to model API configurable
+- make configurable which LLM to use
 ### Fixed
 - fix and document tests
 - complete docstrings

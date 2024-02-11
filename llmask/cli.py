@@ -39,6 +39,12 @@ def transform(
         "--input",
         help="Input text that will be transformed.",
     ),
+    model_name: str = Option(
+        "nous-hermes2:10.7b-solar-q6_K",
+        "-m",
+        "--model",
+        help="Name of model to use (as known to model server).",
+    ),
     url: str = Option(
         "http://localhost:11434/v1",
         "-u",
@@ -58,6 +64,7 @@ def transform(
     transformed_texts = chain_apply_transformations(
         input=input,
         transformation_funcs=transformation_funcs,
+        model_name=model_name,
         api_client=api_client,
     )
 

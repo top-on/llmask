@@ -23,6 +23,7 @@ def query_llm(
     api_client: OpenAI,
     instructions: str,
     input: str,
+    model_name: str,
     temperature: float,
     seed: int,
 ) -> str:
@@ -32,13 +33,14 @@ def query_llm(
         api_client: Instance of client for model API
         instructions: instructions on how to change input text
         input: input text to be changed
+        model_name: name of LLM to be used (known to model server)
         temperature: parameter passed to LLM
         seed: random seed (for reproducibility)
     Returns:
         Response text from LLM
     """
     completion = api_client.chat.completions.create(
-        model="nous-hermes2:10.7b-solar-q6_K",
+        model=model_name,
         messages=[
             {
                 "role": "system",
