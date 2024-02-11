@@ -1,6 +1,7 @@
 # python
 *.pyc
 __pycache__
+/dist
 
 # IDE
 .vscode
