@@ -95,16 +95,10 @@ def parse_transformations_string(transformations: str) -> list[Callable]:
         transformstions: sequential transformations, in compact string format.
     """
     # check input validity
-    for transformation in transformations:
-        try:
-            assert transformation in TRANSFORMATION_MAPPING.keys()
-        except AssertionError:
-            print(
-                f"Transformation key '{transformation}' is not valid! "
-                f"Valid options are: {list(TRANSFORMATION_MAPPING.keys())}. "
-                "Exiting."
-            )
-            exit(1)
+    if not set(transformations).issubset(TRANSFORMATION_MAPPING.keys()):
+        invalid_keys = set(transformations) - set(TRANSFORMATION_MAPPING.keys())
+        print(f"Invalid transformation keys: {invalid_keys}! Exiting.")
+        exit(1)
 
     return [TRANSFORMATION_MAPPING[char] for char in transformations]
 
