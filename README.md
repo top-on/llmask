@@ -103,5 +103,6 @@ To execute this project's test suite, run `pytest tests/`
 
 ## Roadmap
 * add transformation for imitation
+* refactor chain_apply_transformations: use pattern matching
 * support transformations from and into text files
 * measure success of obfuscation (e.g. check with GPTZero if suspected author is an LLM)
