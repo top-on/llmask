@@ -22,6 +22,8 @@ Despite it's pre-production status, this library has several known limitations:
 2. Long chains of transformations have observed to make the LLM output artifacts.
 3. Sensitive content can trigger an LLMs censoring, and thus ruin the output.<br>
 In this case it is advised to try uncensored LLMs, e.g. of the [`wizard-vicuna-uncensored`](https://registry.ollama.ai/library/wizard-vicuna-uncensored) type.
+4. Currently, unique names of places or persons are not removed/anonymized.
+
 
 ## Example workflow
 
