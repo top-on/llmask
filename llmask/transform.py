@@ -1,16 +1,19 @@
 """Module with functions to transform text."""
 
-from typing import Callable
-
 from openai import OpenAI
 
 from llmask.model import query_llm
+
+TRANSFORMATION_MAPPING = {
+    "s": "simplify",
+    "t": "thesaurus",
+    "i": "imitate",
+}
 
 
 # OPTIONAL: make functions retun system prompts only, and move queries LLM in model.py?
 def thesaurus(
     input: str,
-    persona: str,  # not used, just for interface compatibility
     model_name: str,
     api_client: OpenAI,
 ) -> str:
@@ -18,7 +21,6 @@ def thesaurus(
 
     Args:
         input: Text input to be transformed.
-        persona: this parameter is not used. It's only for interface compatibility.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
     Return:
@@ -47,7 +49,6 @@ def thesaurus(
 
 def simplify(
     input: str,
-    persona: str,  # not used, just for interface compatibility
     model_name: str,
     api_client: OpenAI,
 ) -> str:
@@ -55,7 +56,6 @@ def simplify(
 
     Args:
         input: Text input to be transformed.
-        persona: this parameter is not used. It's only for interface compatibility.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
     Return:
@@ -125,36 +125,16 @@ def imitate(
     return response
 
 
-TRANSFORMATION_MAPPING = {
-    "s": simplify,
-    "t": thesaurus,
-    "i": imitate,
-}
-
-
-def parse_transformations_string(transformations: str) -> list[Callable]:
-    """Parse CLI parameter 'transformations' to list of to-be-applied functions.
-
-    Args:
-        transformstions: sequential transformations, in compact string format.
-    """
-    # check input validity
-    if not set(transformations).issubset(TRANSFORMATION_MAPPING.keys()):
-        invalid_keys = set(transformations) - set(TRANSFORMATION_MAPPING.keys())
-        print(f"Invalid transformation keys: {invalid_keys}! Exiting.")
-        exit(1)
-
-    return [TRANSFORMATION_MAPPING[char] for char in transformations]
-
-
-def chain_apply_transformations(
+def apply_transformations(
     input: str,
     persona: str,
-    transformation_funcs: list[Callable],
+    transformations: str,
     model_name: str,
     api_client: OpenAI,
-) -> list[str]:
-    """Apply chain of transformations, passing each result as input to the next step.
+) -> str:
+    """Subsequently apply a chain of transformations.
+
+    Each transformed output is passed as input to the next transformation.
 
     Args:
         input: user-provided text input.
@@ -163,16 +143,36 @@ def chain_apply_transformations(
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
     Return:
-        list of transformed text, for each step of transformation pipeline.
+        text after pipeline's final transformation.
     """
-    transformed_texts: list[str] = []  # list with each result of transformation chain
-    for transformation_func in transformation_funcs:
-        output = transformation_func(
-            input=input,
-            persona=persona,
-            model_name=model_name,
-            api_client=api_client,
+    for transformation in transformations:
+        print(
+            f"Applying transformation '{TRANSFORMATION_MAPPING.get(transformation)}':\n"
         )
-        transformed_texts.append(output)
+        match transformation:
+            case "s":
+                output = simplify(
+                    input=input,
+                    model_name=model_name,
+                    api_client=api_client,
+                )
+            case "t":
+                output = thesaurus(
+                    input=input,
+                    model_name=model_name,
+                    api_client=api_client,
+                )
+            case "i":
+                output = imitate(
+                    input=input,
+                    persona=persona,
+                    model_name=model_name,
+                    api_client=api_client,
+                )
+            case _:
+                print(f"Invalid transformation '{transformation}' ! Exiting.")
+                exit(1)
+        print(f"> {output}\n\n")
+
         input = output  # use this transformtion's output as next input
-    return transformed_texts
+    return output

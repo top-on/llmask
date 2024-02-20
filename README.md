@@ -76,15 +76,18 @@ This command line tool can be installed with `pipx install`.
 
 ```
 $ llmask -h
+
 Usage: llmask [OPTIONS]
 
   Transform input text with chained transformations by a Large Language Model.
 
 Options:
-  -t, --transformations TEXT  Compact representation of operations (e.g. 'ts'
-                              for the steps 'thesaurus -> simplify')
-                              [default: ts]
+  -t, --transformations TEXT  Compact representation of operations (e.g. 'tsi'
+                              for the steps 'thesaurus -> simplify ->
+                              imitate')  [default: ts]
   -i, --input TEXT            Input text that will be transformed.  [required]
+  -p, --persona TEXT          Name of persona whose writing style to imitate.
+                              [default: Ernest Hemingway]
   -m, --model TEXT            Name of model to use (as known to model server).
                               [default: nous-hermes2:10.7b-solar-q6_K]
   -u, --url TEXT              URL of Open AI compatible model API.  [default:
@@ -102,6 +105,5 @@ The development environment can be installed via: `poetry install`.
 To execute this project's test suite, run `pytest tests/`
 
 ## Roadmap
-* refactor chain_apply_transformations: use pattern matching
 * support transformations from and into text files
 * measure success of obfuscation (e.g. check with GPTZero if suspected author is an LLM)

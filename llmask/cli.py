@@ -2,15 +2,11 @@
 
 import logging
 import os
-from typing import Callable
 
 from typer import Option, Typer
 
 from llmask.model import get_api_client
-from llmask.transform import (
-    chain_apply_transformations,
-    parse_transformations_string,
-)
+from llmask.transform import apply_transformations
 
 logging.basicConfig(level=logging.WARN)
 os.environ["NO_COLOR"] = "1"  # deactivate color for rich/colorama (if installed)
@@ -30,7 +26,7 @@ def transform(
         "--transformations",
         help=(
             "Compact representation of operations "
-            "(e.g. 'ts' for the steps 'thesaurus -> simplify')"
+            "(e.g. 'tsi' for the steps 'thesaurus -> simplify -> imitate')"
         ),
     ),
     input: str = Option(
@@ -62,22 +58,14 @@ def transform(
     print("\nUser-provided input:\n")
     print(f"> {input}\n\n")
 
-    transformation_funcs: list[Callable] = parse_transformations_string(
-        transformations=transformations
-    )
-
     api_client = get_api_client(url=url)
-    transformed_texts = chain_apply_transformations(
+    apply_transformations(
         input=input,
         persona=persona,
-        transformation_funcs=transformation_funcs,
+        transformations=transformations,
         model_name=model_name,
         api_client=api_client,
     )
-
-    for func, text in zip(transformation_funcs, transformed_texts):
-        print(f"Result after applying transformation '{func.__name__}':\n")
-        print(f"> {text}\n\n")
 
 
 if __name__ == "__main__":
