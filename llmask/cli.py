@@ -39,6 +39,12 @@ def transform(
         "--input",
         help="Input text that will be transformed.",
     ),
+    persona: str = Option(
+        "Ernest Hemingway",
+        "-p",
+        "--persona",
+        help="Name of persona whose writing style to imitate.",
+    ),
     model_name: str = Option(
         "nous-hermes2:10.7b-solar-q6_K",
         "-m",
@@ -63,6 +69,7 @@ def transform(
     api_client = get_api_client(url=url)
     transformed_texts = chain_apply_transformations(
         input=input,
+        persona=persona,
         transformation_funcs=transformation_funcs,
         model_name=model_name,
         api_client=api_client,
