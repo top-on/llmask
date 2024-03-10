@@ -42,7 +42,7 @@ $ ollama pull nous-hermes2:10.7b-solar-q6_K
 3. Mask your writing style by transforming it into a different one:
 
 ```
-$ llmask transform -i "this was a triumph. i'm making a note here: huge success."
+$ llmask transform -v -i "this was a triumph. i'm making a note here: huge success."
 
 
 User-provided input:
@@ -75,7 +75,7 @@ This command line tool can be installed with `pipx install`.
 ### Usage options
 
 ```
-$ llmask -h
+$ llmask --help
 
 Usage: llmask [OPTIONS]
 
@@ -92,6 +92,8 @@ Options:
                               [default: nous-hermes2:10.7b-solar-q6_K]
   -u, --url TEXT              URL of Open AI compatible model API.  [default:
                               http://localhost:11434/v1]
+  -v, --verbose               Verbosity level. At default, only the final
+                              output is returned.  [default: 0]
   -h, --help                  Show this message and exit.
 ```
 

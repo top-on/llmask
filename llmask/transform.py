@@ -131,6 +131,7 @@ def apply_transformations(
     transformations: str,
     model_name: str,
     api_client: OpenAI,
+    verbose: int,
 ) -> str:
     """Subsequently apply a chain of transformations.
 
@@ -142,13 +143,13 @@ def apply_transformations(
         transformation_funcs: list of transformation functions to be chained.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
+        verbose: verbosity level.
     Return:
         text after pipeline's final transformation.
     """
     for transformation in transformations:
-        print(
-            f"Applying transformation '{TRANSFORMATION_MAPPING.get(transformation)}':\n"
-        )
+        if verbose > 0:
+            print(f"> Applying step '{TRANSFORMATION_MAPPING.get(transformation)}':")
         match transformation:
             case "s":
                 output = simplify(
@@ -172,7 +173,11 @@ def apply_transformations(
             case _:
                 print(f"Invalid transformation '{transformation}' ! Exiting.")
                 exit(1)
-        print(f"> {output}\n\n")
+        if verbose > 0:
+            print(f"\n{output}\n\n")
 
         input = output  # use this transformtion's output as next input
+
+    if verbose == 0:
+        print(output)
     return output
