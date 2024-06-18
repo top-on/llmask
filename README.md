@@ -112,12 +112,9 @@ Options:
 
 The development environment can be installed via: `poetry install`.
 
-### Run test suite
-
-To execute this project's test suite, run `pytest tests/`
-
 ## Roadmap
 * support transformations from and into text files
 * measure success of obfuscation
   * measure success of anonymzation with de-anonymization tools (e.g. `faststylometry`)
   * check with GPTZero if suspected author is an LLM
+* re-introduce test suite
