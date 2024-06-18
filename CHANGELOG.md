@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - add switch for verbosity of output
 - allow to pipe text into the CLI via stdin
+### Changed
+- rename transformation 'i' (imitation) to 'p' (persona), for consistency with -p flag
 
 ## [0.3.0] - 2024-02-20
 ### Added
