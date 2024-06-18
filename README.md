@@ -90,9 +90,11 @@ Usage: llmask [OPTIONS]
   Transform input text with chained transformations by a Large Language Model.
 
 Options:
-  -t, --transformations TEXT  Compact representation of operations (e.g. 'tsi'
-                              for the steps 'thesaurus -> simplify ->
-                              imitate')  [default: ts]
+  -t, --transformations TEXT  Sequence of transformations to apply in order,
+                              e.g. 'tsp' for the steps 'thesaurus -> simplify
+                              -> persona', where 't' applies thesaurus, 's'
+                              simplifies, and 'p' imitates a persona.
+                              [default: ts]
   -i, --input TEXT            Input text that will be transformed.
   -p, --persona TEXT          Name of persona whose writing style to imitate.
                               [default: Ernest Hemingway]

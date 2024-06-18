@@ -7,7 +7,7 @@ from llmask.model import query_llm
 TRANSFORMATION_MAPPING = {
     "s": "simplify",
     "t": "thesaurus",
-    "i": "imitate",
+    "p": "persona_imitation",
 }
 
 
@@ -85,7 +85,7 @@ def simplify(
     return response
 
 
-def imitate(
+def persona_imitation(
     input: str,
     persona: str,
     model_name: str,
@@ -163,8 +163,8 @@ def apply_transformations(
                     model_name=model_name,
                     api_client=api_client,
                 )
-            case "i":
-                output = imitate(
+            case "p":
+                output = persona_imitation(
                     input=input,
                     persona=persona,
                     model_name=model_name,

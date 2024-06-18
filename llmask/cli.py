@@ -27,8 +27,9 @@ def transform(
         "-t",
         "--transformations",
         help=(
-            "Compact representation of operations "
-            "(e.g. 'tsi' for the steps 'thesaurus -> simplify -> imitate')"
+            "Sequence of transformations to apply in order, "
+            "e.g. 'tsp' for the steps 'thesaurus -> simplify -> persona', "
+            "where 't' applies thesaurus, 's' simplifies, and 'p' imitates a persona."
         ),
     ),
     input: str = Option(
