@@ -2,7 +2,9 @@
 
 import logging
 import os
+import sys
 
+import typer
 from typer import Option, Typer
 
 from llmask.model import get_api_client
@@ -30,7 +32,7 @@ def transform(
         ),
     ),
     input: str = Option(
-        ...,
+        None,
         "-i",
         "--input",
         help="Input text that will be transformed.",
@@ -65,6 +67,17 @@ def transform(
     if verbose > 0:
         print("\n> User-provided input:")
         print(f"\n{input}\n\n")
+
+    # if no input parameter set, try to read from stdin/pipe
+    if input is None:
+        if not sys.stdin.isatty():  # check if stdin is connected to a pipe
+            input = sys.stdin.read()
+        else:
+            typer.echo(
+                message="Need to either provide input (-i) or provide text via stdin!",
+                err=True,
+            )
+            raise typer.Exit(code=1)
 
     api_client = get_api_client(url=url)
     apply_transformations(

@@ -25,7 +25,7 @@ In this case it is advised to try uncensored LLMs, e.g. of the [`wizard-vicuna-u
 4. Currently, unique names of places or persons are not removed/anonymized.
 
 
-## Example workflow
+## Example workflows
 
 1. Locally serve a Large Language Model server with [ollama](https://ollama.com/):
 
@@ -60,13 +60,21 @@ Result after applying transformation 'simplify':
 > This was a great success. I'll write down: wonderful win.
 ```
 
+### Piping input and output
+
+For larger-scale text work, the text input and output can also be piped:
+
+```
+$ cat input.txt | llmask > output.txt
+```
+
 ## Getting started
 ### System requirements
 
 LLMs can run on ordinary CPUs, e.g. with `ollama`.
 However, GPU acceleration greatly accelerates execution speed.
 
-This project is best tested on Apple Silicon hardware.
+Please note that this project is tested most thoroughly on Apple Silicon hardware.
 
 ### Installation
 
@@ -85,7 +93,7 @@ Options:
   -t, --transformations TEXT  Compact representation of operations (e.g. 'tsi'
                               for the steps 'thesaurus -> simplify ->
                               imitate')  [default: ts]
-  -i, --input TEXT            Input text that will be transformed.  [required]
+  -i, --input TEXT            Input text that will be transformed.
   -p, --persona TEXT          Name of persona whose writing style to imitate.
                               [default: Ernest Hemingway]
   -m, --model TEXT            Name of model to use (as known to model server).

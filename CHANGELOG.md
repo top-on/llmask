@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - add switch for verbosity of output
+- allow to pipe text into the CLI via stdin
 
 ## [0.3.0] - 2024-02-20
 ### Added
