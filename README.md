@@ -3,11 +3,11 @@
 A command-line tool for masking authorship of text,
 by changing the writing style with a Large Language Model.
 
-The main use cases of masking an author's writing sytle are:
+The main use cases of masking an author's writing style are:
 
-* anonymizing who is the author of a text
+* anonymizing the author of a text
 * protecting the identity of whistleblowers and activists
-* see more at [Adversarial Stylometry](https://en.wikipedia.org/wiki/Adversarial_stylometry)
+* see more use cases at [Adversarial Stylometry](https://en.wikipedia.org/wiki/Adversarial_stylometry)
 
 ## Disclaimer
 
