@@ -11,7 +11,7 @@ TRANSFORMATION_MAPPING = {
 }
 
 
-# TODO: combine transformation functions into a single function
+# OPTIONAL: combine transformation functions into a single function
 # OPTIONAL: make functions retun system prompts only, and move queries LLM in model.py?
 def thesaurus(
     input_text: str,
