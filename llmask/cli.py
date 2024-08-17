@@ -10,6 +10,9 @@ from typer import Option, Typer
 from llmask.model import get_api_client
 from llmask.transform import apply_transformations
 
+DEFAULT_MODEL_NAME: str = "nous-hermes2:10.7b-solar-q6_K"
+DEFAULT_URL: str = "http://localhost:11434/v1"
+
 logging.basicConfig(level=logging.WARN)
 os.environ["NO_COLOR"] = "1"  # deactivate color for rich/colorama (if installed)
 
@@ -45,13 +48,13 @@ def transform(
         help="Name of persona whose writing style to imitate.",
     ),
     model_name: str = Option(
-        "nous-hermes2:10.7b-solar-q6_K",  # TODO: move to constant
+        DEFAULT_MODEL_NAME,
         "-m",
         "--model",
         help="Name of model to use (as known to model server).",
     ),
     url: str = Option(
-        "http://localhost:11434/v1",  # TODO: move to constant
+        DEFAULT_URL,
         "-u",
         "--url",
         help="URL of Open AI compatible model API.",
