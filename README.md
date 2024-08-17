@@ -33,16 +33,16 @@ In this case it is advised to try uncensored LLMs, e.g. of the [`wizard-vicuna-u
 $ ollama serve
 ```
 
-2. Make sure a potent model is downloaded, e.g. a version of [`nous-hermes2`](https://registry.ollama.ai/library/nous-hermes2):
+2. Make sure a potent model is served, e.g. a version of [`nous-hermes2`](https://registry.ollama.ai/library/nous-hermes2):
 
 ```
-$ ollama pull nous-hermes2:10.7b-solar-q6_K
+$ ollama run nous-hermes2:10.7b-solar-q6_K
 ```
 
 3. Mask your writing style by transforming it into a different one:
 
 ```
-$ llmask transform -v -i "this was a triumph. i'm making a note here: huge success."
+$ llmask -v -i "this was a triumph. i'm making a note here: huge success."
 
 
 User-provided input:
@@ -78,7 +78,7 @@ Please note that this project is tested most thoroughly on Apple Silicon hardwar
 
 ### Installation
 
-This command line tool can be installed with `pipx install`.
+This command line tool can be installed with: `pipx install llmask`
 
 ### Usage options
 
