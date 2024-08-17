@@ -19,7 +19,6 @@ def get_api_client(url: str) -> OpenAI:
     )
 
 
-# OPTIONAL: pass down model name
 def query_llm(
     api_client: OpenAI,
     instructions: str,
