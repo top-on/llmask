@@ -23,7 +23,7 @@ def get_api_client(url: str) -> OpenAI:
 def query_llm(
     api_client: OpenAI,
     instructions: str,
-    input: str,
+    input_text: str,
     model_name: str,
     temperature: float,
     seed: int,
@@ -33,7 +33,7 @@ def query_llm(
     Args:
         api_client: Instance of client for model API
         instructions: instructions on how to change input text
-        input: input text to be changed
+        input_text: input text to be changed
         model_name: name of LLM to be used (known to model server)
         temperature: parameter passed to LLM
         seed: random seed (for reproducibility)
@@ -49,7 +49,7 @@ def query_llm(
             },
             {
                 "role": "user",
-                "content": input,
+                "content": input_text,
             },
         ],
         temperature=temperature,

@@ -35,7 +35,7 @@ def transform(
             "where 't' applies thesaurus, 's' simplifies, and 'p' imitates a persona."
         ),
     ),
-    input: str = Option(
+    input_text: str = Option(
         None,
         "-i",
         "--input",
@@ -66,16 +66,17 @@ def transform(
         count=True,
         help="Verbosity level. At default, only the final output is returned.",
     ),
+    # TODO: make seed an option
 ):
     """Transform input text with chained transformations by a Large Language Model."""
     if verbose > 0:
         print("\n> User-provided input:")
-        print(f"\n{input}\n\n")  # TODO: do not name variable 'input'
+        print(f"\n{input_text}\n\n")
 
     # if no input parameter set, try to read from stdin/pipe
-    if input is None:
+    if input_text is None:
         if not sys.stdin.isatty():  # check if stdin is connected to a pipe
-            input = sys.stdin.read()
+            input_text = sys.stdin.read()
         else:
             typer.echo(
                 message="Need to either provide input (-i) or provide text via stdin!",
@@ -85,7 +86,7 @@ def transform(
 
     api_client = get_api_client(url=url)
     apply_transformations(
-        input=input,
+        input_text=input_text,
         persona=persona,
         transformations=transformations,
         model_name=model_name,

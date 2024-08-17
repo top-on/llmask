@@ -14,7 +14,7 @@ TRANSFORMATION_MAPPING = {
 # TODO: combine transformation functions into a single function
 # OPTIONAL: make functions retun system prompts only, and move queries LLM in model.py?
 def thesaurus(
-    input: str,
+    input_text: str,
     model_name: str,
     api_client: OpenAI,
     verbose: int,
@@ -22,7 +22,7 @@ def thesaurus(
     """Change input by replacing words with their synonyms.
 
     Args:
-        input: Text input to be transformed.
+        input_text: Text input to be transformed.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
         verbose: verbosity level.
@@ -42,7 +42,7 @@ def thesaurus(
     response_stream = query_llm(
         api_client=api_client,
         instructions=instructions,
-        input=input,
+        input_text=input_text,
         model_name=model_name,
         temperature=1.5,  # TODO: move to CLI option
         seed=42,
@@ -55,7 +55,7 @@ def thesaurus(
 
 
 def simplify(
-    input: str,
+    input_text: str,
     model_name: str,
     api_client: OpenAI,
     verbose: int,
@@ -63,7 +63,7 @@ def simplify(
     """Simplify language of input.
 
     Args:
-        input: Text input to be transformed.
+        input_text: Text input to be transformed.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
         verbose: verbosity level.
@@ -87,7 +87,7 @@ def simplify(
         api_client=api_client,
         instructions=instructions,
         model_name=model_name,
-        input=input,
+        input_text=input_text,
         temperature=0.3,  # TODO: move to CLI option
         seed=42,
     )
@@ -99,7 +99,7 @@ def simplify(
 
 
 def persona_imitation(
-    input: str,
+    input_text: str,
     persona: str,
     model_name: str,
     api_client: OpenAI,
@@ -108,7 +108,7 @@ def persona_imitation(
     """Imitate the writing style of a given persona.
 
     Args:
-        input: Text input to be transformed.
+        input_text: Text input to be transformed.
         persona: Whose writing style to imitate.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
@@ -133,7 +133,7 @@ def persona_imitation(
         api_client=api_client,
         instructions=instructions,
         model_name=model_name,
-        input=input,
+        input_text=input_text,
         temperature=0.3,  # TODO: move to CLI option
         seed=42,
     )
@@ -145,7 +145,7 @@ def persona_imitation(
 
 
 def apply_transformations(
-    input: str,
+    input_text: str,
     persona: str,
     transformations: str,
     model_name: str,
@@ -157,7 +157,7 @@ def apply_transformations(
     Each transformed output is passed as input to the next transformation.
 
     Args:
-        input: user-provided text input.
+        input_text: user-provided text input.
         persona: name of persona whose writing style to imitate.
         transformation_funcs: list of transformation functions to be chained.
         model_name: name of model to use (as known to model server).
@@ -172,21 +172,21 @@ def apply_transformations(
         match transformation:
             case "s":
                 output = simplify(
-                    input=input,
+                    input_text=input_text,
                     model_name=model_name,
                     api_client=api_client,
                     verbose=verbose,
                 )
             case "t":
                 output = thesaurus(
-                    input=input,
+                    input_text=input_text,
                     model_name=model_name,
                     api_client=api_client,
                     verbose=verbose,
                 )
             case "p":
                 output = persona_imitation(
-                    input=input,
+                    input_text=input_text,
                     persona=persona,
                     model_name=model_name,
                     api_client=api_client,
@@ -196,7 +196,7 @@ def apply_transformations(
                 print(f"Invalid transformation '{transformation}' ! Exiting.")
                 exit(1)
 
-        input = output  # use this transformtion's output as next input
+        input_text = output  # use this transformtion's output as next input
 
     if verbose == 0:
         print(output)
