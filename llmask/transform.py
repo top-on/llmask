@@ -11,6 +11,7 @@ TRANSFORMATION_MAPPING = {
 }
 
 
+# TODO: combine transformation functions into a single function
 # OPTIONAL: make functions retun system prompts only, and move queries LLM in model.py?
 def thesaurus(
     input: str,
@@ -41,7 +42,7 @@ def thesaurus(
         instructions=instructions,
         input=input,
         model_name=model_name,
-        temperature=1.5,
+        temperature=1.5,  # TODO: move to CLI option
         seed=42,
     )
     return response
@@ -79,7 +80,7 @@ def simplify(
         instructions=instructions,
         model_name=model_name,
         input=input,
-        temperature=0.3,
+        temperature=0.3,  # TODO: move to CLI option
         seed=42,
     )
     return response
@@ -119,7 +120,7 @@ def persona_imitation(
         instructions=instructions,
         model_name=model_name,
         input=input,
-        temperature=0.3,
+        temperature=0.3,  # TODO: move to CLI option
         seed=42,
     )
     return response

@@ -45,13 +45,13 @@ def transform(
         help="Name of persona whose writing style to imitate.",
     ),
     model_name: str = Option(
-        "nous-hermes2:10.7b-solar-q6_K",
+        "nous-hermes2:10.7b-solar-q6_K",  # TODO: move to constant
         "-m",
         "--model",
         help="Name of model to use (as known to model server).",
     ),
     url: str = Option(
-        "http://localhost:11434/v1",
+        "http://localhost:11434/v1",  # TODO: move to constant
         "-u",
         "--url",
         help="URL of Open AI compatible model API.",
@@ -67,7 +67,7 @@ def transform(
     """Transform input text with chained transformations by a Large Language Model."""
     if verbose > 0:
         print("\n> User-provided input:")
-        print(f"\n{input}\n\n")
+        print(f"\n{input}\n\n")  # TODO: do not name variable 'input'
 
     # if no input parameter set, try to read from stdin/pipe
     if input is None:
