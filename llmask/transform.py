@@ -18,6 +18,8 @@ def thesaurus(
     model_name: str,
     api_client: OpenAI,
     verbose: int,
+    temperature: float,
+    seed: int,
 ) -> str:
     """Change input by replacing words with their synonyms.
 
@@ -26,6 +28,8 @@ def thesaurus(
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
         verbose: verbosity level.
+        temperature: parameter passed to LLM.
+        seed: random seed (for reproducibility).
     Return:
         Transformed text.
     """
@@ -44,8 +48,8 @@ def thesaurus(
         instructions=instructions,
         input_text=input_text,
         model_name=model_name,
-        temperature=1.5,  # TODO: move to CLI option
-        seed=42,
+        temperature=temperature,
+        seed=seed,
     )
     response = collect_response_stream(
         response_stream=response_stream,
@@ -59,6 +63,8 @@ def simplify(
     model_name: str,
     api_client: OpenAI,
     verbose: int,
+    temperature: float,
+    seed: int,
 ) -> str:
     """Simplify language of input.
 
@@ -67,6 +73,8 @@ def simplify(
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
         verbose: verbosity level.
+        temperature: parameter passed to LLM.
+        seed: random seed (for reproducibility).
     Return:
         Transformed text.
     """
@@ -88,8 +96,8 @@ def simplify(
         instructions=instructions,
         model_name=model_name,
         input_text=input_text,
-        temperature=0.3,  # TODO: move to CLI option
-        seed=42,
+        temperature=temperature,
+        seed=seed,
     )
     response = collect_response_stream(
         response_stream=response_stream,
@@ -104,6 +112,8 @@ def persona_imitation(
     model_name: str,
     api_client: OpenAI,
     verbose: int,
+    temperature: float,
+    seed: int,
 ) -> str:
     """Imitate the writing style of a given persona.
 
@@ -113,6 +123,8 @@ def persona_imitation(
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
         verbose: verbosity level.
+        temperature: parameter passed to LLM.
+        seed: random seed (for reproducibility).
     Return:
         Transformed text.
     """
@@ -134,8 +146,8 @@ def persona_imitation(
         instructions=instructions,
         model_name=model_name,
         input_text=input_text,
-        temperature=0.3,  # TODO: move to CLI option
-        seed=42,
+        temperature=temperature,
+        seed=seed,
     )
     response = collect_response_stream(
         response_stream=response_stream,
@@ -151,6 +163,8 @@ def apply_transformations(
     model_name: str,
     api_client: OpenAI,
     verbose: int,
+    temperature: float,
+    seed: int,
 ) -> str:
     """Subsequently apply a chain of transformations.
 
@@ -163,6 +177,8 @@ def apply_transformations(
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
         verbose: verbosity level.
+        temperature: parameter passed to LLM.
+        seed: random seed (for reproducibility).
     Return:
         text after pipeline's final transformation.
     """
@@ -176,6 +192,8 @@ def apply_transformations(
                     model_name=model_name,
                     api_client=api_client,
                     verbose=verbose,
+                    temperature=temperature,
+                    seed=seed,
                 )
             case "t":
                 output = thesaurus(
@@ -183,6 +201,8 @@ def apply_transformations(
                     model_name=model_name,
                     api_client=api_client,
                     verbose=verbose,
+                    temperature=temperature,
+                    seed=seed,
                 )
             case "p":
                 output = persona_imitation(
@@ -191,6 +211,8 @@ def apply_transformations(
                     model_name=model_name,
                     api_client=api_client,
                     verbose=verbose,
+                    temperature=temperature,
+                    seed=seed,
                 )
             case _:
                 print(f"Invalid transformation '{transformation}' ! Exiting.")

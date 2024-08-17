@@ -12,6 +12,9 @@ from llmask.transform import apply_transformations
 
 DEFAULT_MODEL_NAME: str = "nous-hermes2:10.7b-solar-q6_K"
 DEFAULT_URL: str = "http://localhost:11434/v1"
+DEFAULT_TEMPERATURE: float = 0.5
+DEFAULT_SEED: int = 42
+
 
 logging.basicConfig(level=logging.WARN)
 os.environ["NO_COLOR"] = "1"  # deactivate color for rich/colorama (if installed)
@@ -66,7 +69,26 @@ def transform(
         count=True,
         help="Verbosity level. At default, only the final output is returned.",
     ),
-    # TODO: make seed an option
+    temperature: float = Option(
+        DEFAULT_TEMPERATURE,
+        "-r",
+        "--randomness",
+        help=(
+            "Higher values make the output more random."
+            "Parameter value is passes as 'sampling temperature' to language model. "
+        ),
+        min=0.0,
+        max=2.0,
+    ),
+    seed: int = Option(
+        DEFAULT_SEED,
+        "-s",
+        "--seed",
+        help=(
+            "Repeated requests with the same `seed` and parameters "
+            "should return the same result."
+        ),
+    ),
 ):
     """Transform input text with chained transformations by a Large Language Model."""
     if verbose > 0:
@@ -92,6 +114,8 @@ def transform(
         model_name=model_name,
         api_client=api_client,
         verbose=verbose,
+        temperature=temperature,
+        seed=seed,
     )
 
 
