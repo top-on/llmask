@@ -2,7 +2,7 @@
 
 from openai import OpenAI
 
-from llmask.model import query_llm
+from llmask.model import collect_response_stream, query_llm
 
 TRANSFORMATION_MAPPING = {
     "s": "simplify",
@@ -17,6 +17,7 @@ def thesaurus(
     input: str,
     model_name: str,
     api_client: OpenAI,
+    verbose: int,
 ) -> str:
     """Change input by replacing words with their synonyms.
 
@@ -24,6 +25,7 @@ def thesaurus(
         input: Text input to be transformed.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
+        verbose: verbosity level.
     Return:
         Transformed text.
     """
@@ -37,13 +39,17 @@ def thesaurus(
         Only output the changed input.
         Do not start with 'understood' etc.
     """
-    response = query_llm(
+    response_stream = query_llm(
         api_client=api_client,
         instructions=instructions,
         input=input,
         model_name=model_name,
         temperature=1.5,  # TODO: move to CLI option
         seed=42,
+    )
+    response = collect_response_stream(
+        response_stream=response_stream,
+        print_chunks=verbose > 0,
     )
     return response
 
@@ -52,6 +58,7 @@ def simplify(
     input: str,
     model_name: str,
     api_client: OpenAI,
+    verbose: int,
 ) -> str:
     """Simplify language of input.
 
@@ -59,6 +66,7 @@ def simplify(
         input: Text input to be transformed.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
+        verbose: verbosity level.
     Return:
         Transformed text.
     """
@@ -75,13 +83,17 @@ def simplify(
         Only output the changed input.
         Do not start with 'understood' etc.
     """
-    response = query_llm(
+    response_stream = query_llm(
         api_client=api_client,
         instructions=instructions,
         model_name=model_name,
         input=input,
         temperature=0.3,  # TODO: move to CLI option
         seed=42,
+    )
+    response = collect_response_stream(
+        response_stream=response_stream,
+        print_chunks=verbose > 0,
     )
     return response
 
@@ -91,6 +103,7 @@ def persona_imitation(
     persona: str,
     model_name: str,
     api_client: OpenAI,
+    verbose: int,
 ) -> str:
     """Imitate the writing style of a given persona.
 
@@ -99,6 +112,7 @@ def persona_imitation(
         persona: Whose writing style to imitate.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
+        verbose: verbosity level.
     Return:
         Transformed text.
     """
@@ -115,13 +129,17 @@ def persona_imitation(
         Only output the changed input.
         Do not start with 'understood' etc.
     """
-    response = query_llm(
+    response_stream = query_llm(
         api_client=api_client,
         instructions=instructions,
         model_name=model_name,
         input=input,
         temperature=0.3,  # TODO: move to CLI option
         seed=42,
+    )
+    response = collect_response_stream(
+        response_stream=response_stream,
+        print_chunks=verbose > 0,
     )
     return response
 
@@ -157,12 +175,14 @@ def apply_transformations(
                     input=input,
                     model_name=model_name,
                     api_client=api_client,
+                    verbose=verbose,
                 )
             case "t":
                 output = thesaurus(
                     input=input,
                     model_name=model_name,
                     api_client=api_client,
+                    verbose=verbose,
                 )
             case "p":
                 output = persona_imitation(
@@ -170,12 +190,11 @@ def apply_transformations(
                     persona=persona,
                     model_name=model_name,
                     api_client=api_client,
+                    verbose=verbose,
                 )
             case _:
                 print(f"Invalid transformation '{transformation}' ! Exiting.")
                 exit(1)
-        if verbose > 0:
-            print(f"\n{output}\n\n")
 
         input = output  # use this transformtion's output as next input
 

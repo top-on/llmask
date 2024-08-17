@@ -1,7 +1,8 @@
 """Wrapper for prompting LLM."""
 
 # %%
-from openai import OpenAI
+from openai import OpenAI, Stream
+from openai.types.chat.chat_completion_chunk import ChatCompletionChunk
 
 
 def get_api_client(url: str) -> OpenAI:
@@ -26,7 +27,7 @@ def query_llm(
     model_name: str,
     temperature: float,
     seed: int,
-) -> str:
+) -> Stream[ChatCompletionChunk]:
     """Interface function to query LLM and retrieve response.
 
     Args:
@@ -37,9 +38,9 @@ def query_llm(
         temperature: parameter passed to LLM
         seed: random seed (for reproducibility)
     Returns:
-        Response text from LLM
+        Response stream from LLM
     """
-    completion = api_client.chat.completions.create(
+    response_stream = api_client.chat.completions.create(
         model=model_name,
         messages=[
             {
@@ -53,9 +54,39 @@ def query_llm(
         ],
         temperature=temperature,
         seed=seed,
+        stream=True,
     )
+    return response_stream
 
-    response = str(completion.choices[0].message.content)
+
+def collect_response_stream(
+    response_stream: Stream[ChatCompletionChunk],
+    print_chunks: bool,
+) -> str:
+    """Collect response from LLM response stream.
+
+    Args:
+        response_stream: stream of LLM response chunks
+        print_chunks: whether to print chunks as they come in
+    Returns:
+        Full response from LLM.
+    """
+    response: str = ""
+
+    if print_chunks:
+        print()
+    for chunk in response_stream:
+        delta: str = chunk.choices[0].delta.content  # type: ignore
+        response += delta
+        if print_chunks:
+            print(
+                delta,
+                end="",  # no newline after print
+                flush=True,  # print to terminal immediately
+            )
+
+    if print_chunks:
+        print("\n\n")
     return response
 
 
