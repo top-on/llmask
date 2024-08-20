@@ -10,6 +10,12 @@ from typer import Option, Typer
 from llmask.model import get_api_client
 from llmask.transform import apply_transformations
 
+DEFAULT_MODEL_NAME: str = "nous-hermes2:10.7b-solar-q6_K"
+DEFAULT_URL: str = "http://localhost:11434/v1"
+DEFAULT_TEMPERATURE: float = 0.5
+DEFAULT_SEED: int = 42
+
+
 logging.basicConfig(level=logging.WARN)
 os.environ["NO_COLOR"] = "1"  # deactivate color for rich/colorama (if installed)
 
@@ -32,7 +38,7 @@ def transform(
             "where 't' applies thesaurus, 's' simplifies, and 'p' imitates a persona."
         ),
     ),
-    input: str = Option(
+    input_text: str = Option(
         None,
         "-i",
         "--input",
@@ -45,13 +51,13 @@ def transform(
         help="Name of persona whose writing style to imitate.",
     ),
     model_name: str = Option(
-        "nous-hermes2:10.7b-solar-q6_K",
+        DEFAULT_MODEL_NAME,
         "-m",
         "--model",
         help="Name of model to use (as known to model server).",
     ),
     url: str = Option(
-        "http://localhost:11434/v1",
+        DEFAULT_URL,
         "-u",
         "--url",
         help="URL of Open AI compatible model API.",
@@ -63,16 +69,36 @@ def transform(
         count=True,
         help="Verbosity level. At default, only the final output is returned.",
     ),
+    temperature: float = Option(
+        DEFAULT_TEMPERATURE,
+        "-r",
+        "--randomness",
+        help=(
+            "Higher values make the output more random."
+            "Parameter value is passes as 'sampling temperature' to language model. "
+        ),
+        min=0.0,
+        max=2.0,
+    ),
+    seed: int = Option(
+        DEFAULT_SEED,
+        "-s",
+        "--seed",
+        help=(
+            "Repeated requests with the same `seed` and parameters "
+            "should return the same result."
+        ),
+    ),
 ):
     """Transform input text with chained transformations by a Large Language Model."""
     if verbose > 0:
         print("\n> User-provided input:")
-        print(f"\n{input}\n\n")
+        print(f"\n{input_text}\n\n")
 
     # if no input parameter set, try to read from stdin/pipe
-    if input is None:
+    if input_text is None:
         if not sys.stdin.isatty():  # check if stdin is connected to a pipe
-            input = sys.stdin.read()
+            input_text = sys.stdin.read()
         else:
             typer.echo(
                 message="Need to either provide input (-i) or provide text via stdin!",
@@ -82,12 +108,14 @@ def transform(
 
     api_client = get_api_client(url=url)
     apply_transformations(
-        input=input,
+        input_text=input_text,
         persona=persona,
         transformations=transformations,
         model_name=model_name,
         api_client=api_client,
         verbose=verbose,
+        temperature=temperature,
+        seed=seed,
     )
 
 

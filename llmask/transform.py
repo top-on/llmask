@@ -2,7 +2,7 @@
 
 from openai import OpenAI
 
-from llmask.model import query_llm
+from llmask.model import collect_response_stream, query_llm
 
 TRANSFORMATION_MAPPING = {
     "s": "simplify",
@@ -11,18 +11,25 @@ TRANSFORMATION_MAPPING = {
 }
 
 
+# OPTIONAL: combine transformation functions into a single function
 # OPTIONAL: make functions retun system prompts only, and move queries LLM in model.py?
 def thesaurus(
-    input: str,
+    input_text: str,
     model_name: str,
     api_client: OpenAI,
+    verbose: int,
+    temperature: float,
+    seed: int,
 ) -> str:
     """Change input by replacing words with their synonyms.
 
     Args:
-        input: Text input to be transformed.
+        input_text: Text input to be transformed.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
+        verbose: verbosity level.
+        temperature: parameter passed to LLM.
+        seed: random seed (for reproducibility).
     Return:
         Transformed text.
     """
@@ -36,28 +43,38 @@ def thesaurus(
         Only output the changed input.
         Do not start with 'understood' etc.
     """
-    response = query_llm(
+    response_stream = query_llm(
         api_client=api_client,
         instructions=instructions,
-        input=input,
+        input_text=input_text,
         model_name=model_name,
-        temperature=1.5,
-        seed=42,
+        temperature=temperature,
+        seed=seed,
+    )
+    response = collect_response_stream(
+        response_stream=response_stream,
+        print_chunks=verbose > 0,
     )
     return response
 
 
 def simplify(
-    input: str,
+    input_text: str,
     model_name: str,
     api_client: OpenAI,
+    verbose: int,
+    temperature: float,
+    seed: int,
 ) -> str:
     """Simplify language of input.
 
     Args:
-        input: Text input to be transformed.
+        input_text: Text input to be transformed.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
+        verbose: verbosity level.
+        temperature: parameter passed to LLM.
+        seed: random seed (for reproducibility).
     Return:
         Transformed text.
     """
@@ -74,30 +91,40 @@ def simplify(
         Only output the changed input.
         Do not start with 'understood' etc.
     """
-    response = query_llm(
+    response_stream = query_llm(
         api_client=api_client,
         instructions=instructions,
         model_name=model_name,
-        input=input,
-        temperature=0.3,
-        seed=42,
+        input_text=input_text,
+        temperature=temperature,
+        seed=seed,
+    )
+    response = collect_response_stream(
+        response_stream=response_stream,
+        print_chunks=verbose > 0,
     )
     return response
 
 
 def persona_imitation(
-    input: str,
+    input_text: str,
     persona: str,
     model_name: str,
     api_client: OpenAI,
+    verbose: int,
+    temperature: float,
+    seed: int,
 ) -> str:
     """Imitate the writing style of a given persona.
 
     Args:
-        input: Text input to be transformed.
+        input_text: Text input to be transformed.
         persona: Whose writing style to imitate.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
+        verbose: verbosity level.
+        temperature: parameter passed to LLM.
+        seed: random seed (for reproducibility).
     Return:
         Transformed text.
     """
@@ -114,36 +141,44 @@ def persona_imitation(
         Only output the changed input.
         Do not start with 'understood' etc.
     """
-    response = query_llm(
+    response_stream = query_llm(
         api_client=api_client,
         instructions=instructions,
         model_name=model_name,
-        input=input,
-        temperature=0.3,
-        seed=42,
+        input_text=input_text,
+        temperature=temperature,
+        seed=seed,
+    )
+    response = collect_response_stream(
+        response_stream=response_stream,
+        print_chunks=verbose > 0,
     )
     return response
 
 
 def apply_transformations(
-    input: str,
+    input_text: str,
     persona: str,
     transformations: str,
     model_name: str,
     api_client: OpenAI,
     verbose: int,
+    temperature: float,
+    seed: int,
 ) -> str:
     """Subsequently apply a chain of transformations.
 
     Each transformed output is passed as input to the next transformation.
 
     Args:
-        input: user-provided text input.
+        input_text: user-provided text input.
         persona: name of persona whose writing style to imitate.
         transformation_funcs: list of transformation functions to be chained.
         model_name: name of model to use (as known to model server).
         api_client: instance of adapter to model API.
         verbose: verbosity level.
+        temperature: parameter passed to LLM.
+        seed: random seed (for reproducibility).
     Return:
         text after pipeline's final transformation.
     """
@@ -153,30 +188,37 @@ def apply_transformations(
         match transformation:
             case "s":
                 output = simplify(
-                    input=input,
+                    input_text=input_text,
                     model_name=model_name,
                     api_client=api_client,
+                    verbose=verbose,
+                    temperature=temperature,
+                    seed=seed,
                 )
             case "t":
                 output = thesaurus(
-                    input=input,
+                    input_text=input_text,
                     model_name=model_name,
                     api_client=api_client,
+                    verbose=verbose,
+                    temperature=temperature,
+                    seed=seed,
                 )
             case "p":
                 output = persona_imitation(
-                    input=input,
+                    input_text=input_text,
                     persona=persona,
                     model_name=model_name,
                     api_client=api_client,
+                    verbose=verbose,
+                    temperature=temperature,
+                    seed=seed,
                 )
             case _:
                 print(f"Invalid transformation '{transformation}' ! Exiting.")
                 exit(1)
-        if verbose > 0:
-            print(f"\n{output}\n\n")
 
-        input = output  # use this transformtion's output as next input
+        input_text = output  # use this transformtion's output as next input
 
     if verbose == 0:
         print(output)

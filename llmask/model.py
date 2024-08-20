@@ -1,7 +1,8 @@
 """Wrapper for prompting LLM."""
 
 # %%
-from openai import OpenAI
+from openai import OpenAI, Stream
+from openai.types.chat.chat_completion_chunk import ChatCompletionChunk
 
 
 def get_api_client(url: str) -> OpenAI:
@@ -18,28 +19,27 @@ def get_api_client(url: str) -> OpenAI:
     )
 
 
-# OPTIONAL: pass down model name
 def query_llm(
     api_client: OpenAI,
     instructions: str,
-    input: str,
+    input_text: str,
     model_name: str,
     temperature: float,
     seed: int,
-) -> str:
+) -> Stream[ChatCompletionChunk]:
     """Interface function to query LLM and retrieve response.
 
     Args:
         api_client: Instance of client for model API
         instructions: instructions on how to change input text
-        input: input text to be changed
+        input_text: input text to be changed
         model_name: name of LLM to be used (known to model server)
         temperature: parameter passed to LLM
         seed: random seed (for reproducibility)
     Returns:
-        Response text from LLM
+        Response stream from LLM
     """
-    completion = api_client.chat.completions.create(
+    response_stream = api_client.chat.completions.create(
         model=model_name,
         messages=[
             {
@@ -48,14 +48,44 @@ def query_llm(
             },
             {
                 "role": "user",
-                "content": input,
+                "content": input_text,
             },
         ],
         temperature=temperature,
         seed=seed,
+        stream=True,
     )
+    return response_stream
 
-    response = str(completion.choices[0].message.content)
+
+def collect_response_stream(
+    response_stream: Stream[ChatCompletionChunk],
+    print_chunks: bool,
+) -> str:
+    """Collect response from LLM response stream.
+
+    Args:
+        response_stream: stream of LLM response chunks
+        print_chunks: whether to print chunks as they come in
+    Returns:
+        Full response from LLM.
+    """
+    response: str = ""
+
+    if print_chunks:
+        print()
+    for chunk in response_stream:
+        delta: str = chunk.choices[0].delta.content  # type: ignore
+        response += delta
+        if print_chunks:
+            print(
+                delta,
+                end="",  # no newline after print
+                flush=True,  # print to terminal immediately
+            )
+
+    if print_chunks:
+        print("\n\n")
     return response
 
 

@@ -90,21 +90,29 @@ Usage: llmask [OPTIONS]
   Transform input text with chained transformations by a Large Language Model.
 
 Options:
-  -t, --transformations TEXT  Sequence of transformations to apply in order,
-                              e.g. 'tsp' for the steps 'thesaurus -> simplify
-                              -> persona', where 't' applies thesaurus, 's'
-                              simplifies, and 'p' imitates a persona.
-                              [default: ts]
-  -i, --input TEXT            Input text that will be transformed.
-  -p, --persona TEXT          Name of persona whose writing style to imitate.
-                              [default: Ernest Hemingway]
-  -m, --model TEXT            Name of model to use (as known to model server).
-                              [default: nous-hermes2:10.7b-solar-q6_K]
-  -u, --url TEXT              URL of Open AI compatible model API.  [default:
-                              http://localhost:11434/v1]
-  -v, --verbose               Verbosity level. At default, only the final
-                              output is returned.  [default: 0]
-  -h, --help                  Show this message and exit.
+  -t, --transformations TEXT    Sequence of transformations to apply in order,
+                                e.g. 'tsp' for the steps 'thesaurus ->
+                                simplify -> persona', where 't' applies
+                                thesaurus, 's' simplifies, and 'p' imitates a
+                                persona.  [default: ts]
+  -i, --input TEXT              Input text that will be transformed.
+  -p, --persona TEXT            Name of persona whose writing style to
+                                imitate.  [default: Ernest Hemingway]
+  -m, --model TEXT              Name of model to use (as known to model
+                                server).  [default: nous-
+                                hermes2:10.7b-solar-q6_K]
+  -u, --url TEXT                URL of Open AI compatible model API.
+                                [default: http://localhost:11434/v1]
+  -v, --verbose                 Verbosity level. At default, only the final
+                                output is returned.  [default: 0]
+  -r, --randomness FLOAT RANGE  Higher values make the output more
+                                random.Parameter value is passes as 'sampling
+                                temperature' to language model.   [default:
+                                0.5; 0.0<=x<=2.0]
+  -s, --seed INTEGER            Repeated requests with the same `seed` and
+                                parameters should return the same result.
+                                [default: 42]
+  -h, --help                    Show this message and exit.
 ```
 
 ## Development setup
